@@ -97,7 +97,7 @@ Aqui as coisas ficam mais interessantes...
 
 ##### O que fazer?
 1. Caso o usuário atualize a página a lista de personagens detalhados deverá permanecer intacta.
-2. Caso o usuário troque o filme na primeira página a lista de personagens detalhados deve ser "zerada", mesmo que existam personagens em comum entre os filmes.
+2. Se você optou por dar a possibilidade de o usuário selecionar na primeira página o filme: caso o usuário troque o filme a lista de personagens detalhados deve ser "zerada", mesmo que existam personagens em comum entre os filmes.
 
 #### Etapa 4
 
