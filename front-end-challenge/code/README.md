@@ -1,0 +1,1 @@
+Use a pasta `code` como desejar e esse README para descrever como rodar o seu projeto.
