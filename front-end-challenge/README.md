@@ -25,7 +25,9 @@ Todos os dados serão consumidos do [**SWAPI - The Star Wars API**](https://swap
 ### Iniciando
 Leia a documentação do [**SWAPI - The Star Wars API**](https://swapi.co/) para saber como fazer suas requisições.
 
-Faça um fork e trabalhe no seu próprio repositório.
+Faça um fork e trabalhe no seu próprio repositório. 
+
+Utilize a pasta `code` para fazer o seu projeto.
 
 Caso ainda não tenha lido os detalhes da vaga, veja aqui no [**LinkedIn**]().
 
