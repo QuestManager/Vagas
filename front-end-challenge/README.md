@@ -29,7 +29,7 @@ Faça um fork e trabalhe no seu próprio repositório.
 
 Utilize a pasta `code` para fazer o seu projeto.
 
-Caso ainda não tenha lido os detalhes da vaga, veja aqui no [**LinkedIn**]().
+Caso ainda não tenha lido os detalhes da vaga, veja aqui no [**LinkedIn**](https://www.linkedin.com/jobs/view/697312095/).
 
 ### Quais habilidades o desafio envolve?
 Iremos analisar a sua capacidade de manipulação dinâmica da DOM através de um framework JavaScript, bem como a capacidade de tratamento de dados dinâmicos recebidos através de um serviço independente e a sua habilidade para estilizar o site.
@@ -41,7 +41,7 @@ O conhecimentos que você deve utilizar:
 * Responsividade
 * Controle de versionamento
 
-### Seria ótimo se ...
+### Será ótimo se ...
 * utilizar GraphQL
     * Fazer consultas recebendo apenas os dados pertinentes
 * utilizar a semântica do HTML5
@@ -50,6 +50,7 @@ O conhecimentos que você deve utilizar:
     * tratamento de erro para possíveis falhas nas requisições
 * ter um código limpo
 * fazer uso do GitFlow
+* realizar testes do seu código
 
 ## Mãos à obra!
 
