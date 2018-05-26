@@ -52,7 +52,7 @@ const progressBarAnimation =
       transition(':enter', [
         style({opacity: 1}),
         animate('200ms ease-in-out', style({opacity: 1, width: 0})),
-        animate('3000ms ease-in-out', style({opacity: 1, width: '100%'})),
+        animate('5000ms ease-in-out', style({opacity: 1, width: '100%'})),
       ])
     ]
   );
@@ -186,8 +186,7 @@ export class HomeComponent implements OnDestroy, OnInit {
     this.presentationScreen = true;
 
     // Go to characters page after crawl text.
-    // setTimeout(() => { this.beforeTransiction(); }, 50000);
-    setTimeout(() => { this.beforeTransiction(); }, 20000);
+    setTimeout(() => { this.beforeTransiction(); }, 50000);
   }
 
   // Return to home screen.
@@ -229,7 +228,7 @@ export class HomeComponent implements OnDestroy, OnInit {
     this.volumeDown();
 
     // Change page.
-    setTimeout(() => { this.goToPage('characters'); }, 5000);
+    setTimeout(() => { this.goToPage('characters'); }, 6000);
 
   }
 
@@ -240,7 +239,7 @@ export class HomeComponent implements OnDestroy, OnInit {
     audio.volume = level > 0 ? level : 0;
 
     if (audio.volume > 0) {
-      setTimeout(() => { this.volumeDown(level - 0.2); }, 2000);
+      setTimeout(() => { this.volumeDown(level - 0.2); }, 3000);
     }
 
   }

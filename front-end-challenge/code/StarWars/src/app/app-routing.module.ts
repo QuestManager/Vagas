@@ -11,7 +11,7 @@ import { NotfoundComponent } from './notfound/notfound.component';
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'characters/:id', component: CharactersComponent },
-  { path: '**', redirectTo: 'notfound' }
+  { path: '**', component: NotfoundComponent }
 ];
 
 @NgModule({

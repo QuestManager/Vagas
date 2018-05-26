@@ -85,7 +85,10 @@
       font-size: 2rem;
       opacity: 0;
 
-      h1 { font-size: 3rem; }
+      h1 { 
+        font-size: 3rem;
+        margin: 20px auto;
+      }
 
       @keyframes intro {
         0% { opacity: 0; }

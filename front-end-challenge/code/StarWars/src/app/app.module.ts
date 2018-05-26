@@ -1,24 +1,30 @@
+// Angular modules.
+import { AppRoutingModule } from './app-routing.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 
-import { AppRoutingModule } from './app-routing.module';
+// Custom components.
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
-import { NotfoundComponent } from './notfound/notfound.component';
 import { CharactersComponent } from './characters/characters.component';
+import { NotfoundComponent } from './notfound/notfound.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    NotfoundComponent,
-    CharactersComponent
+    CharactersComponent,
+    NotfoundComponent
   ],
   imports: [
+    AppRoutingModule,
+    BrowserAnimationsModule,
     BrowserModule,
-    AppRoutingModule
+    HttpClientModule
   ],
-  providers: [],
+  providers: [HttpClientModule],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
