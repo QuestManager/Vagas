@@ -21,8 +21,13 @@ export class HttpService {
   apiVehicles: string = this.api + 'vehicles/';
 
   // Constructor method.
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
+  // Get basic film info.
+  public getFilmsFull(): Observable<HttpResponse<any>> {
 
+    return this.http.get<any>(this.apiFilms, { observe: 'response' });
+
+  }
 
 }
