@@ -163,6 +163,7 @@
         animation: scroll 100s linear 16s;
         position: absolute;
         top: 100%;
+        z-index: 1000;
 
         h1 { 
           font-size: 5rem !important;

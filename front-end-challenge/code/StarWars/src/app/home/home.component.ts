@@ -99,6 +99,7 @@ export class HomeComponent implements OnDestroy, OnInit {
   isLoading: boolean = false;
   presentationScreen: boolean = false;
   onTransiction: boolean = false;
+  allowTransiction: boolean = false;
 
   // Constructor method.
   constructor(
@@ -208,6 +209,9 @@ export class HomeComponent implements OnDestroy, OnInit {
     // Show crawl text.
     this.presentationScreen = true;
 
+    // Allow transiction.
+    this.allowTransiction = true;
+
     // Go to characters page after crawl text.
     setTimeout(() => { this.beforeTransiction(); }, 40000);
 
@@ -218,6 +222,7 @@ export class HomeComponent implements OnDestroy, OnInit {
 
     this.presentationScreen = false;
     this.onTransiction = false;
+    this.allowTransiction = false;
     this.hideTooltip();
 
   }
@@ -241,7 +246,7 @@ export class HomeComponent implements OnDestroy, OnInit {
   // Before transiction to characters page.
   public beforeTransiction(): void {
 
-    if (this.onTransiction) {
+    if (this.allowTransiction) {
 
       // Change status.
       this.isLoading = false;
