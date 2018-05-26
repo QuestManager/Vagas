@@ -1,6 +1,6 @@
 // Angular modules.
 import { ActivatedRoute, Router, RouterLinkActive } from '@angular/router';
-import { animate, state, style, transition, trigger } from '@angular/animations';
+import { animate, animateChild, query, state, style, transition, trigger } from '@angular/animations';
 import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 
 // Interfaces.
@@ -44,6 +44,29 @@ const homeLinkAnimation =
       ]
     );
 
+// Render page animation.
+const transictionAnimation =
+
+  trigger(
+      'transictionAnimation', [
+        transition(':enter', [
+          query('*', [
+            style({opacity: 0, 'margin-top': '100%'}),
+            animate('200ms ease-in-out', style({opacity: 0.3, 'margin-top': '60%'})),
+            animate('300ms ease-in-out', style({opacity: 0.6, 'margin-top': '30%'})),
+            animate('400ms ease-in-out', style({opacity: 1, 'margin-top': 0})),
+          ]),
+          query('@progressBarAnimation', [
+            animateChild()
+          ])
+        ]),
+        transition(':leave', [
+          style({top: '50%', opacity: 1}),
+          animate('300ms', style({top: '0', opacity: 0}))
+        ])
+      ]
+    );
+
 // Transiction progress bar.
 const progressBarAnimation =
 
@@ -51,7 +74,7 @@ const progressBarAnimation =
     'progressBarAnimation', [
       transition(':enter', [
         style({opacity: 1}),
-        animate('200ms ease-in-out', style({opacity: 1, width: 0})),
+        animate('1200ms ease-in-out', style({opacity: 1, width: 0})),
         animate('5000ms ease-in-out', style({opacity: 1, width: '100%'})),
       ])
     ]
@@ -61,7 +84,7 @@ const progressBarAnimation =
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  animations: [enterAnimation, homeLinkAnimation, progressBarAnimation]
+  animations: [enterAnimation, homeLinkAnimation, progressBarAnimation, transictionAnimation]
 })
 export class HomeComponent implements OnDestroy, OnInit {
 
@@ -186,13 +209,16 @@ export class HomeComponent implements OnDestroy, OnInit {
     this.presentationScreen = true;
 
     // Go to characters page after crawl text.
-    setTimeout(() => { this.beforeTransiction(); }, 50000);
+    setTimeout(() => { this.beforeTransiction(); }, 40000);
+
   }
 
   // Return to home screen.
   public goToHome(): void {
 
     this.presentationScreen = false;
+    this.onTransiction = false;
+    this.hideTooltip();
 
   }
 
@@ -215,20 +241,21 @@ export class HomeComponent implements OnDestroy, OnInit {
   // Before transiction to characters page.
   public beforeTransiction(): void {
 
-    // Change status.
-    this.isLoading = false;
-    this.presentationScreen = false;
-    this.onTransiction = true;
+    if (this.onTransiction) {
 
-    // Change container style.
-    const container: HTMLElement = document.getElementById('crawl-container');
-    container.classList.add('crawl-transiction');
+      // Change status.
+      this.isLoading = false;
+      this.presentationScreen = false;
+      this.onTransiction = true;
 
-    // Volume down.
-    this.volumeDown();
+      // Change container style.
+      const container: HTMLElement = document.getElementById('crawl-container');
+      container.classList.add('crawl-transiction');
 
-    // Change page.
-    setTimeout(() => { this.goToPage('characters'); }, 6000);
+      // Volume down.
+      this.volumeDown();
+
+    }
 
   }
 
@@ -239,8 +266,37 @@ export class HomeComponent implements OnDestroy, OnInit {
     audio.volume = level > 0 ? level : 0;
 
     if (audio.volume > 0) {
-      setTimeout(() => { this.volumeDown(level - 0.2); }, 3000);
+
+      setTimeout(() => { this.volumeDown(level - 0.2); }, 1500);
+
+    } else {
+
+      // Change page.
+      setTimeout(() => { this.goToPage('characters'); }, 1000);
+
     }
+
+  }
+
+  // Show tooltip.
+  public showTooltip() {
+
+    // Get tooltip element.
+    const tooltip: HTMLElement = document.getElementById('tooltipo-home');
+
+    // Configure position and show it.
+    tooltip.style.left = '55px';
+    tooltip.style.top = '17px';
+    tooltip.style.visibility = 'visible';
+
+  }
+
+  // Hide tooltip.
+  public hideTooltip() {
+
+    // Get tooltip element and hide it.
+    const tooltip: HTMLElement = document.getElementById('tooltipo-home');
+    tooltip.style.visibility = 'hidden';
 
   }
 

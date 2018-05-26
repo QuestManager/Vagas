@@ -34,6 +34,9 @@
       font-size: 8rem;
     }
 
+    // Subtitle.
+    .presentation-text.subtitle { color: $gray-custom; }
+
     // Random text (movie name).
     .presentation-text.random_text {
       background-color: $black-custom;
@@ -85,11 +88,6 @@
       font-size: 2rem;
       opacity: 0;
 
-      h1 { 
-        font-size: 3rem;
-        margin: 20px auto;
-      }
-
       @keyframes intro {
         0% { opacity: 0; }
         20% { opacity: 1; }
@@ -136,7 +134,7 @@
     .crawl-text {
 
       font-family: Century Gothic, CenturyGothic, AppleGothic, sans-serif;
-      transform: perspective(300px) rotateX(25deg);
+      transform: perspective(400px) rotateX(25deg);
       transform-origin: 50% 100%;
       text-align: justify;
       position: absolute;
@@ -165,6 +163,13 @@
         animation: scroll 100s linear 16s;
         position: absolute;
         top: 100%;
+
+        h1 { 
+          font-size: 5rem !important;
+          margin: 40px 0 !important;
+        }
+
+        p { font-size: 3rem !important; }
 
         @keyframes scroll {
           0% { top: 100%; }
@@ -209,6 +214,15 @@
   .presentation-crawl.crawl-transiction {
     height: 100%;
     width: 100%;
+  }
+
+  .tooltip {
+    visibility: hidden;
+    background-color: $yellow-custom;
+    border-radius: 3px;
+    color: $gray-custom;
+    padding: 5px;
+    position: absolute;
   }
 
 }

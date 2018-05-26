@@ -55,12 +55,13 @@
     </div>
 
     <!-- Transiction loader. -->
-    <div *ngIf="onTransiction" class="transiction">
+    <div *ngIf="onTransiction" class="transiction" [@transictionAnimation]>
       
       <!-- Logo. -->
       <div class="transiction-logo">
         <div class="presentation-text fixed_text">Star</div>
         <div class="presentation-text fixed_text">Wars</div>
+        <div class="presentation-text subtitle">Episode {{activeFilm.episode_id}} - {{activeFilm.title}}</div>
       </div>
 
       <!-- Progress bar. -->
@@ -82,8 +83,12 @@
     *ngIf="!isLoading && presentationScreen"
     class="img-home"
     src="assets/images/rebel.png"
+    (mouseenter)="showTooltip()"
+    (mouseleave)="hideTooltip()"
     (click)="goToHome()"
     [@homeLinkAnimation]
   >
+
+  <div id="tooltipo-home" class="tooltip">Return to home page</div>
 
 </section>
