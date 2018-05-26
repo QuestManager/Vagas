@@ -179,6 +179,72 @@ export class HomeComponent implements OnDestroy, OnInit {
 
   }
 
+  // Show film presentation.
+  public showPresentation(): void {
+
+    // Show crawl text.
+    this.presentationScreen = true;
+
+    // Go to characters page after crawl text.
+    // setTimeout(() => { this.beforeTransiction(); }, 50000);
+    setTimeout(() => { this.beforeTransiction(); }, 20000);
+  }
+
+  // Return to home screen.
+  public goToHome(): void {
+
+    this.presentationScreen = false;
+
+  }
+
+  // Go to another page.
+  public goToPage(page: string): void {
+
+    switch (page.toLowerCase()) {
+
+      case 'characters':
+        this.router.navigate(['characters', this.activeFilm.episode_id]);
+        break;
+
+      default:
+        this.goToHome();
+
+    }
+
+  }
+
+  // Before transiction to characters page.
+  public beforeTransiction(): void {
+
+    // Change status.
+    this.isLoading = false;
+    this.presentationScreen = false;
+    this.onTransiction = true;
+
+    // Change container style.
+    const container: HTMLElement = document.getElementById('crawl-container');
+    container.classList.add('crawl-transiction');
+
+    // Volume down.
+    this.volumeDown();
+
+    // Change page.
+    setTimeout(() => { this.goToPage('characters'); }, 5000);
+
+  }
+
+  // Turn down audio volume.
+  public volumeDown(level: number = 0.8): void {
+
+    const audio: HTMLAudioElement = <HTMLAudioElement>document.getElementById('startwars_theme');
+    audio.volume = level > 0 ? level : 0;
+
+    if (audio.volume > 0) {
+      setTimeout(() => { this.volumeDown(level - 0.2); }, 2000);
+    }
+
+  }
+
   // Called when window is resized.
   public onResize(): void {
 
