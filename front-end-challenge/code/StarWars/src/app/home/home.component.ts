@@ -160,6 +160,25 @@ export class HomeComponent implements OnDestroy, OnInit {
 
   }
 
+  // Show next film.
+  public nextFilm(): void {
+
+    // Current episode ID.
+    const curId: number = this.activeFilm.episode_id;
+
+    // List length.
+    const listLen: number = this.films.length;
+
+    // Get and select previous.
+    for (let i = 0; i < listLen; i++) {
+      if (this.films[i].episode_id === curId) {
+        this.activeFilm = i === (listLen - 1) ? this.films[0] : this.films[i + 1];
+        break;
+      }
+    }
+
+  }
+
   // Called when window is resized.
   public onResize(): void {
 
