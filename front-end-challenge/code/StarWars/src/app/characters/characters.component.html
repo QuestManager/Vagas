@@ -20,7 +20,7 @@
 
       <div
         *ngFor="let char of characters; let i = index;"
-        data-url="char.url"
+        id="{{char.url}}"
         class="char-list-item"
         mwlDraggable
         dropData="{{char.url}}"
@@ -35,13 +35,29 @@
     <!-- Characters info. -->
     <div class="char-info">
 
+      <!-- Selected characters details. -->
+      <div *ngFor="let char of selCharacters; let i = index;" class="char-details">
+        
+        <h1>{{char.name}}</h1>
+
+        <div class="details">
+
+        </div>
+
+        <div class="close-details">
+          X
+        </div>
+
+      </div>
+
+      <!-- Droppable area. -->
       <div
         mwlDroppable
         class="dropContainer"
         [class.dropOverActive]="dropOverActive"
         (dragEnter)="dropOverActive = true"
         (dragLeave)="dropOverActive = false"
-        (drop)="this.droppedData = $event.dropData"
+        (drop)="dropped($event.dropData)"
       >
         <span [hidden]="droppedData">Drop an character to see his data.</span>
         <span [hidden]="!droppedData">{{ droppedData }}</span>

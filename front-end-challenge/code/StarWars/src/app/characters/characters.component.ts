@@ -77,6 +77,7 @@ export class CharactersComponent implements OnDestroy, OnInit {
   // Drag and drop related.
   droppedData: string;
   dropOverActive: boolean = false;
+  selCharacters: IPeople[] = [];
 
   // Status.
   isLoading: boolean = false;
@@ -98,26 +99,32 @@ export class CharactersComponent implements OnDestroy, OnInit {
     // Get item ID from route parameters.
     this.route.params.subscribe(params => {
 
-      // Get product ID.
+      // Get film ID.
       if (params['id']) {
 
+        // Store film ID.
         this.filmeId = parseInt(params['id'], 10);
 
+        // Get all characters.
         this.http.getCharacters().subscribe(
           res => {
 
-            console.log(res.body.result);
+            // Store items.
             res.body.results.forEach((item) => {
               this.characters.push(<IPeople>item);
             });
-            console.log(this.characters);
+
+            // Loader.
             this.isLoading = false;
 
           },
           err => {
 
+            // Show error.
             alert('Search error.');
             console.log(err);
+
+            // Loader.
             this.isLoading = false;
 
           }
@@ -164,7 +171,31 @@ export class CharactersComponent implements OnDestroy, OnInit {
 
   // When a draggable element is dropped.
   public dragEnd(event): void {
-    console.log('Element was dragged', event);
+
+    // console.log(this.droppedData);
+
+  }
+
+  // When a droppable element receive an item.
+  public dropped(data: any): void {
+
+    // Get dropped item.
+    this.droppedData = data;
+
+    // Add dropped item to selected list if isn't already selected.
+    if (this.selCharacters.filter((x) => x.url === this.droppedData ).length === 0) {
+
+      // Add item to selected list.
+      this.selCharacters.push(this.characters.filter((c) => c.url === this.droppedData)[0]);
+
+      // Change list item style and attributes.
+      const listItem: HTMLElement = document.getElementById(this.droppedData);
+      listItem.classList.add('selectedCharItem');
+      listItem.removeAttribute('mwlDraggable');
+
+    }
+    console.log(this.selCharacters);
+
   }
 
   // Return to home screen.

@@ -47,6 +47,7 @@
       overflow-y: scroll;
       padding-right: 10px;
 
+      // Each characters list item.
       .char-list-item {
 
         background-color: $yellow-custom;
@@ -63,15 +64,67 @@
 
       }
 
+      // Selected characters list items.
+      .selectedCharItem {
+
+        border: 1px solid $gray-custom;
+        color: $gray-custom;
+        cursor: not-allowed !important;
+        opacity: 0.2;
+
+        &:hover { 
+          border: 1px solid $gray-custom;
+          color: inherit;
+        }
+
+      }
+
     }
 
     // Characters info.
     .char-info {
 
-      display: flex;
+      display: grid;
       padding-left: 20px;
       width: 100%;
 
+      // Selected characters details.
+      .char-details {
+
+        border: 2px solid $black-custom;
+        box-sizing: border-box;
+        clear: both;
+        display: block;
+        padding: 15px;
+        width: 100%;
+
+        h1 { 
+          margin: 5px 0 15px;
+          text-transform: uppercase;
+        }
+
+        // Characters details.
+        .details {
+          border-top: 2px solid $black-custom;
+          padding: 10px 0;
+          margin-top: 10px;
+        }
+
+        // Close button.
+        .close-details {
+          background-color: $black-custom;
+          color: $white-custom;
+          cursor: pointer;
+          position: relative;
+          float: right;
+          margin-top: -73px;
+          margin-right: -17px;
+          padding: 13px;
+        }
+
+      }
+
+      // Droppable area.
       .dropContainer {
 
         align-items: center;
@@ -83,11 +136,12 @@
         text-align: center;
         width: 100%;
 
-        &:hover { background-color: $gray-custom; }
+        //&:hover { background-color: $gray-custom; }
 
       }
 
       .dropOverActive {
+        background-color: $gray-custom;
         cursor: move;
       }
 
