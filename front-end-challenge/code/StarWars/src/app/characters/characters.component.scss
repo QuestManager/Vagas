@@ -29,12 +29,28 @@
     position: absolute;
   }
 
+  // Film title.
+  .film-title {
+
+    margin-top: 20px;
+    text-align: center;
+
+    h1 {
+      background-color: $orange-custom;
+      border-radius: 3px;
+      color: $white-custom;
+      display: inline;
+      padding: 5px 20px 3px;
+    }
+
+  }
+
   // Dynamic content container.
   .dynamic-content {
 
     color: $black-custom;
     display: flex;
-    margin: 40px auto 0;
+    margin: 20px auto 0;
     max-height: 100%;
     width: 80%;
 
@@ -56,6 +72,12 @@
         margin-bottom: 20px;
         padding: 13px 10px 10px;
         text-transform: uppercase;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
 
         &:hover { 
           border-color: $orange-custom;
@@ -88,42 +110,6 @@
       padding-left: 20px;
       width: 100%;
 
-      // Selected characters details.
-      .char-details {
-
-        border: 2px solid $black-custom;
-        box-sizing: border-box;
-        clear: both;
-        display: block;
-        padding: 15px;
-        width: 100%;
-
-        h1 { 
-          margin: 5px 0 15px;
-          text-transform: uppercase;
-        }
-
-        // Characters details.
-        .details {
-          border-top: 2px solid $black-custom;
-          padding: 10px 0;
-          margin-top: 10px;
-        }
-
-        // Close button.
-        .close-details {
-          background-color: $black-custom;
-          color: $white-custom;
-          cursor: pointer;
-          position: relative;
-          float: right;
-          margin-top: -73px;
-          margin-right: -17px;
-          padding: 13px;
-        }
-
-      }
-
       // Droppable area.
       .dropContainer {
 
@@ -133,16 +119,77 @@
         color: $yellow-custom;
         display: flex;
         justify-content: center;
+        /*margin-bottom: 10px;*/
+        min-height: 40px;
         text-align: center;
         width: 100%;
-
-        //&:hover { background-color: $gray-custom; }
+        z-index: 2000;
 
       }
 
+      // When drag over.
       .dropOverActive {
         background-color: $gray-custom;
         cursor: move;
+      }
+
+      // Selected characters details.
+      .char-details {
+
+        background-color: $yellow-custom;
+        border: 2px solid $black-custom;
+        box-sizing: border-box;
+        clear: both;
+        display: block;
+        height: 260px;
+        margin-bottom: 3px;
+        margin-top: 10px;
+        padding: 15px;
+        width: 100%;
+
+        &:first-child { margin-top: 5px; }
+
+        h1 { 
+          margin: 5px 0 15px;
+          text-transform: uppercase;
+        }
+
+        // Characters details.
+        .details {
+
+          border-top: 2px solid $black-custom;
+          display: flex;
+          padding: 10px 0;
+          margin-top: 10px;
+
+          p {
+            font-size: 0.7rem;
+            line-height: 1rem;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+          }
+
+          span {
+            background-color: $black-custom;
+            border-radius: 3px;
+            color: $yellow-custom;
+            padding: 3px;
+          }
+
+        }
+
+        // Close button.
+        .close-details {
+          background-color: $black-custom;
+          color: $yellow-custom;
+          cursor: pointer;
+          position: relative;
+          float: right;
+          margin-top: -15px;
+          margin-right: -17px;
+          padding: 13px;
+        }
+
       }
 
     }

@@ -58,6 +58,7 @@ body.characters_page {
   // Custom values.
   background-color: $yellow-custom;
   color: $white-custom;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 
 }

@@ -14,12 +14,18 @@ import { HomeComponent } from './home/home.component';
 import { CharactersComponent } from './characters/characters.component';
 import { NotfoundComponent } from './notfound/notfound.component';
 
+// Custom pipes.
+import { ArrayJoinPipe } from '_pipes/arrayjoin.pipe';
+import { PersonHeightPipe } from '_pipes/personheight.pipe';
+
 @NgModule({
   declarations: [
     AppComponent,
+    ArrayJoinPipe,
     HomeComponent,
     CharactersComponent,
-    NotfoundComponent
+    NotfoundComponent,
+    PersonHeightPipe
   ],
   imports: [
     AppRoutingModule,

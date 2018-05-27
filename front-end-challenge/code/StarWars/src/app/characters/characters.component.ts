@@ -4,10 +4,12 @@ import { animate, animateChild, query, state, style, transition, trigger } from 
 import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 
 // Interfaces.
+import { IFilm } from '_interfaces/film.interface';
 import { IPeople } from '_interfaces/people.interface';
 
 // Services.
 import { HttpService } from '_services/http/http.service';
+import { nextTick } from 'q';
 
 // Render generic animation.
 const enterAnimation =
@@ -22,6 +24,23 @@ const enterAnimation =
       transition(':leave', [
         style({top: '50%', opacity: 1}),
         animate('300ms', style({top: '0', opacity: 0}))
+      ])
+    ]
+  );
+
+// Characters details.
+const charDetailsAnimation =
+
+  trigger(
+    'charDetailsAnimation', [
+      transition(':enter', [
+        style({opacity: 0}),
+        animate('200ms ease-in-out', style({opacity: 0.3})),
+        animate('500ms ease-in-out', style({opacity: 1})),
+      ]),
+      transition(':leave', [
+        style({top: '0', opacity: 1}),
+        animate('300ms', style({opacity: 0.5, marginTop: '-300px'}))
       ])
     ]
   );
@@ -63,7 +82,7 @@ const homeLinkAnimation =
   selector: 'app-characters',
   templateUrl: './characters.component.html',
   styleUrls: ['./characters.component.scss'],
-  animations: [enterAnimation, contentAnimation, homeLinkAnimation]
+  animations: [enterAnimation, charDetailsAnimation, contentAnimation, homeLinkAnimation]
 })
 export class CharactersComponent implements OnDestroy, OnInit {
 
@@ -72,12 +91,14 @@ export class CharactersComponent implements OnDestroy, OnInit {
 
   // Movie related.
   filmeId: number;
+  film: IFilm;
   characters: IPeople[] = [];
 
   // Drag and drop related.
   droppedData: string;
   dropOverActive: boolean = false;
   selCharacters: IPeople[] = [];
+  nextZindex: number = 1200;
 
   // Status.
   isLoading: boolean = false;
@@ -105,24 +126,45 @@ export class CharactersComponent implements OnDestroy, OnInit {
         // Store film ID.
         this.filmeId = parseInt(params['id'], 10);
 
-        // Get all characters.
-        this.http.getCharacters().subscribe(
-          res => {
+        // Get film data.
+        this.http.getFilmCharacters(this.filmeId).subscribe(
+          result => {
 
-            // Store items.
-            res.body.results.forEach((item) => {
-              this.characters.push(<IPeople>item);
-            });
+            // Store film data.
+            this.film = <IFilm>result.body;
+            console.log(this.film);
 
-            // Loader.
-            this.isLoading = false;
+            // Get all characters.
+            this.http.getCharacters().subscribe(
+              res => {
+
+                // Store items.
+                res.body.results.forEach((item) => {
+                  this.characters.push(<IPeople>item);
+                });
+
+                // Loader.
+                this.isLoading = false;
+
+              },
+              err => {
+
+                // Show error.
+                alert('Search characters error.');
+                console.log(err);
+
+                // Loader.
+                this.isLoading = false;
+
+              }
+            );
 
           },
-          err => {
+          error => {
 
             // Show error.
-            alert('Search error.');
-            console.log(err);
+            alert('Search film error.');
+            console.log(error);
 
             // Loader.
             this.isLoading = false;
@@ -186,15 +228,51 @@ export class CharactersComponent implements OnDestroy, OnInit {
     if (this.selCharacters.filter((x) => x.url === this.droppedData ).length === 0) {
 
       // Add item to selected list.
-      this.selCharacters.push(this.characters.filter((c) => c.url === this.droppedData)[0]);
+      this.selCharacters.unshift(this.characters.filter((c) => c.url === this.droppedData)[0]);
 
       // Change list item style and attributes.
       const listItem: HTMLElement = document.getElementById(this.droppedData);
       listItem.classList.add('selectedCharItem');
       listItem.removeAttribute('mwlDraggable');
 
+      // Set drop over as inactive.
+      this.dropOverActive = false;
+
+      setTimeout(() => {
+
+        // Change new item details styles and attributes.
+        const detailsItem: HTMLElement = document.getElementById('details-' + this.droppedData);
+        detailsItem.style.zIndex = (this.nextZindex).toString();
+
+        // Increase next z-index value.
+        this.nextZindex++;
+
+        // Remove dropped data.
+        this.droppedData = null;
+
+      }, 100);
+
     }
     console.log(this.selCharacters);
+
+  }
+
+  // Remove a selected item.
+  public removeItem(item: string): void {
+
+    // Get index of selected item and remove it from list.
+    const index: number = this.selCharacters.findIndex((c) => c.url === item);
+    if (index > -1) {
+      this.selCharacters.splice(index, 1);
+    }
+
+    // Change list item style and attributes.
+    const listItem: HTMLElement = document.getElementById(item);
+    listItem.classList.remove('selectedCharItem');
+    listItem.setAttribute('mwlDraggable', '');
+
+    // Decrease next z-index value.
+    this.nextZindex--;
 
   }
 

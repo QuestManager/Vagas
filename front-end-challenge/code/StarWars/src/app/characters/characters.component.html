@@ -12,6 +12,10 @@
   >
   <div id="tooltipo-home" class="tooltip">Return to home page</div>
 
+  <div *ngIf="!isLoading" class="film-title" [@enterAnimation]>
+    <h1>Episode {{film.episode_id}} - {{film.title}}</h1>
+  </div>
+
   <!-- Dynamic content. -->
   <div *ngIf="!isLoading" class="dynamic-content" [@contentAnimation]>
 
@@ -35,33 +39,62 @@
     <!-- Characters info. -->
     <div class="char-info">
 
-      <!-- Selected characters details. -->
-      <div *ngFor="let char of selCharacters; let i = index;" class="char-details">
-        
-        <h1>{{char.name}}</h1>
-
-        <div class="details">
-
-        </div>
-
-        <div class="close-details">
-          X
-        </div>
-
-      </div>
-
       <!-- Droppable area. -->
       <div
         mwlDroppable
+        id="dropContainer"
         class="dropContainer"
         [class.dropOverActive]="dropOverActive"
         (dragEnter)="dropOverActive = true"
         (dragLeave)="dropOverActive = false"
         (drop)="dropped($event.dropData)"
       >
-        <span [hidden]="droppedData">Drop an character to see his data.</span>
+        <span [hidden]="droppedData">Drop here an character to see his data.</span>
         <span [hidden]="!droppedData">{{ droppedData }}</span>
       </div>
+      <!-- /dropContainer. -->
+
+      <!-- Selected characters details. -->
+      <div
+        *ngFor="let char of selCharacters; let i = index;"
+        id="details-{{char.url}}"
+        class="char-details"
+        [@charDetailsAnimation]
+      >
+        
+        <div class="close-details" (click)="removeItem(char.url)">
+          X
+        </div>
+
+        <h1>{{char.name}}</h1>
+
+        <div class="details">
+
+          <!-- Left items. -->
+          <div style="float: left; width: 50%;">
+            <p><span>Name</span> {{char.name}}</p>
+            <p><span>Height</span> {{char.height | personHeight}} m</p>
+            <p><span>Mass</span> {{char.mass}} kg</p>
+            <p><span>Hair color</span> {{char.hair_color}}</p>
+            <p><span>Skin color</span> {{char.skin_color}}</p>
+            <p><span>Eye color</span> {{char.eye_color}}</p>
+            <p><span>Birth year</span> {{char.birth_year}}</p>
+            <p><span>Gender</span> {{char.gender}}</p>
+          </div>
+
+          <!-- Right items. -->
+          <div style="float: right; width: 50%;">
+            <p><span>Homeworld</span> {{char.homeworld}}</p>
+            <p><span>Species</span> {{char.species}}</p>
+            <p><span>Films</span> {{char.films | arrayJoin:", "}}</p>
+            <p><span>Vehicles</span> {{char.vehicles | arrayJoin:", "}}</p>
+            <p><span>Starships</span> {{char.starships | arrayJoin:", "}}</p>
+          </div>
+
+        </div>
+
+      </div>
+      <!-- /char-details. -->
 
     </div>
     <!-- /char-info. -->
