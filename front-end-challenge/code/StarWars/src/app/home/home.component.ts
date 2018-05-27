@@ -14,58 +14,58 @@ import { HttpService } from '_services/http/http.service';
 const enterAnimation =
 
   trigger(
-      'enterAnimation', [
-        transition(':enter', [
-          style({opacity: 0, 'margin-top': '100%'}),
-          animate('200ms ease-in-out', style({opacity: 0.3, 'margin-top': '50%'})),
-          animate('500ms ease-in-out', style({opacity: 1, 'margin-top': 0})),
-        ]),
-        transition(':leave', [
-          style({top: '50%', opacity: 1}),
-          animate('300ms', style({top: '0', opacity: 0}))
-        ])
-      ]
-    );
+    'enterAnimation', [
+      transition(':enter', [
+        style({opacity: 0, 'margin-top': '100%'}),
+        animate('200ms ease-in-out', style({opacity: 0.3, 'margin-top': '50%'})),
+        animate('500ms ease-in-out', style({opacity: 1, 'margin-top': 0})),
+      ]),
+      transition(':leave', [
+        style({top: '50%', opacity: 1}),
+        animate('300ms', style({top: '0', opacity: 0}))
+      ])
+    ]
+  );
 
 // Show link to home.
 const homeLinkAnimation =
 
   trigger(
-      'homeLinkAnimation', [
-        transition(':enter', [
-          style({opacity: 0, 'margin-top': '100%'}),
-          animate('200ms ease-in-out', style({opacity: 0.3, 'margin-top': '-50%'})),
-          animate('500ms ease-in-out', style({opacity: 1, 'margin-top': 0})),
-        ]),
-        transition(':leave', [
-          style({top: '0', opacity: 1}),
-          animate('300ms', style({top: '-50%', opacity: 0}))
-        ])
-      ]
-    );
+    'homeLinkAnimation', [
+      transition(':enter', [
+        style({opacity: 0, 'margin-top': '100%'}),
+        animate('200ms ease-in-out', style({opacity: 0.3, 'margin-top': '-50%'})),
+        animate('500ms ease-in-out', style({opacity: 1, 'margin-top': 0})),
+      ]),
+      transition(':leave', [
+        style({top: '0', opacity: 1}),
+        animate('300ms', style({top: '-50%', opacity: 0}))
+      ])
+    ]
+  );
 
 // Render page animation.
 const transictionAnimation =
 
   trigger(
-      'transictionAnimation', [
-        transition(':enter', [
-          query('*', [
-            style({opacity: 0, 'margin-top': '100%'}),
-            animate('200ms ease-in-out', style({opacity: 0.3, 'margin-top': '60%'})),
-            animate('300ms ease-in-out', style({opacity: 0.6, 'margin-top': '30%'})),
-            animate('400ms ease-in-out', style({opacity: 1, 'margin-top': 0})),
-          ]),
-          query('@progressBarAnimation', [
-            animateChild()
-          ])
+    'transictionAnimation', [
+      transition(':enter', [
+        query('*', [
+          style({opacity: 0, 'margin-top': '100%'}),
+          animate('200ms ease-in-out', style({opacity: 0.3, 'margin-top': '60%'})),
+          animate('300ms ease-in-out', style({opacity: 0.6, 'margin-top': '30%'})),
+          animate('400ms ease-in-out', style({opacity: 1, 'margin-top': 0})),
         ]),
-        transition(':leave', [
-          style({top: '50%', opacity: 1}),
-          animate('300ms', style({top: '0', opacity: 0}))
+        query('@progressBarAnimation', [
+          animateChild()
         ])
-      ]
-    );
+      ]),
+      transition(':leave', [
+        style({top: '50%', opacity: 1}),
+        animate('300ms', style({top: '0', opacity: 0}))
+      ])
+    ]
+  );
 
 // Transiction progress bar.
 const progressBarAnimation =

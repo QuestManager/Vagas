@@ -13,7 +13,7 @@
   <div id="tooltipo-home" class="tooltip">Return to home page</div>
 
   <!-- Dynamic content. -->
-  <div *ngIf="!isLoading" class="dynamic-content">
+  <div *ngIf="!isLoading" class="dynamic-content" [@contentAnimation]>
 
     <!-- Characters list. -->
     <div class="char-list">

@@ -9,45 +9,61 @@ import { IPeople } from '_interfaces/people.interface';
 // Services.
 import { HttpService } from '_services/http/http.service';
 
-// Render page animation.
+// Render generic animation.
 const enterAnimation =
 
   trigger(
-      'enterAnimation', [
-        transition(':enter', [
-          style({opacity: 0, 'margin-top': '100%'}),
-          animate('200ms ease-in-out', style({opacity: 0.3, 'margin-top': '50%'})),
-          animate('500ms ease-in-out', style({opacity: 1, 'margin-top': 0})),
-        ]),
-        transition(':leave', [
-          style({top: '50%', opacity: 1}),
-          animate('300ms', style({top: '0', opacity: 0}))
-        ])
-      ]
-    );
+    'enterAnimation', [
+      transition(':enter', [
+        style({opacity: 0, 'margin-top': '100%'}),
+        animate('200ms ease-in-out', style({opacity: 0.3, 'margin-top': '50%'})),
+        animate('500ms ease-in-out', style({opacity: 1, 'margin-top': 0})),
+      ]),
+      transition(':leave', [
+        style({top: '50%', opacity: 1}),
+        animate('300ms', style({top: '0', opacity: 0}))
+      ])
+    ]
+  );
+
+// Render content animation.
+const contentAnimation =
+
+  trigger(
+    'contentAnimation', [
+      transition(':enter', [
+        style({opacity: 0}),
+        animate('500ms', style({opacity: 1})),
+      ]),
+      transition(':leave', [
+        style({opacity: 1}),
+        animate('300ms', style({opacity: 0}))
+      ])
+    ]
+  );
 
 // Show link to home.
 const homeLinkAnimation =
 
   trigger(
-      'homeLinkAnimation', [
-        transition(':enter', [
-          style({opacity: 0, 'margin-top': '100%'}),
-          animate('200ms ease-in-out', style({opacity: 0.3, 'margin-top': '-50%'})),
-          animate('500ms ease-in-out', style({opacity: 1, 'margin-top': 0})),
-        ]),
-        transition(':leave', [
-          style({top: '0', opacity: 1}),
-          animate('300ms', style({top: '-50%', opacity: 0}))
-        ])
-      ]
-    );
+    'homeLinkAnimation', [
+      transition(':enter', [
+        style({opacity: 0, 'margin-top': '100%'}),
+        animate('200ms ease-in-out', style({opacity: 0.3, 'margin-top': '-50%'})),
+        animate('500ms ease-in-out', style({opacity: 1, 'margin-top': 0})),
+      ]),
+      transition(':leave', [
+        style({top: '0', opacity: 1}),
+        animate('300ms', style({top: '-50%', opacity: 0}))
+      ])
+    ]
+  );
 
 @Component({
   selector: 'app-characters',
   templateUrl: './characters.component.html',
   styleUrls: ['./characters.component.scss'],
-  animations: [enterAnimation, homeLinkAnimation]
+  animations: [enterAnimation, contentAnimation, homeLinkAnimation]
 })
 export class CharactersComponent implements OnDestroy, OnInit {
 
