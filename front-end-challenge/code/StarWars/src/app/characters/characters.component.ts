@@ -58,6 +58,10 @@ export class CharactersComponent implements OnDestroy, OnInit {
   filmeId: number;
   characters: IPeople[] = [];
 
+  // Drag and drop related.
+  droppedData: string;
+  dropOverActive: boolean = false;
+
   // Status.
   isLoading: boolean = false;
 
@@ -140,6 +144,11 @@ export class CharactersComponent implements OnDestroy, OnInit {
     const tooltip: HTMLElement = document.getElementById('tooltipo-home');
     tooltip.style.visibility = 'hidden';
 
+  }
+
+  // When a draggable element is dropped.
+  public dragEnd(event): void {
+    console.log('Element was dragged', event);
   }
 
   // Return to home screen.

@@ -5,6 +5,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 
+// Third-party components.
+import { DragAndDropModule } from 'angular-draggable-droppable';
+
 // Custom components.
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
@@ -22,6 +25,7 @@ import { NotfoundComponent } from './notfound/notfound.component';
     AppRoutingModule,
     BrowserAnimationsModule,
     BrowserModule,
+    DragAndDropModule.forRoot(),
     HttpClientModule
   ],
   providers: [HttpClientModule],

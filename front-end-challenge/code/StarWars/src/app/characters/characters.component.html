@@ -18,7 +18,14 @@
     <!-- Characters list. -->
     <div class="char-list">
 
-      <div *ngFor="let char of characters; let i = index;" class="char-list-item">
+      <div
+        *ngFor="let char of characters; let i = index;"
+        data-url="char.url"
+        class="char-list-item"
+        mwlDraggable
+        dropData="{{char.url}}"
+        (dragEnd)="dragEnd($event)"
+      >
         {{char.name}}
       </div>
 
@@ -28,7 +35,17 @@
     <!-- Characters info. -->
     <div class="char-info">
 
-      aaa
+      <div
+        mwlDroppable
+        class="dropContainer"
+        [class.dropOverActive]="dropOverActive"
+        (dragEnter)="dropOverActive = true"
+        (dragLeave)="dropOverActive = false"
+        (drop)="this.droppedData = $event.dropData"
+      >
+        <span [hidden]="droppedData">Drop an character to see his data.</span>
+        <span [hidden]="!droppedData">{{ droppedData }}</span>
+      </div>
 
     </div>
     <!-- /char-info. -->
