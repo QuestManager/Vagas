@@ -91,4 +91,10 @@
 
   <div id="tooltipo-home" class="tooltip">Return to home page</div>
 
+  <span
+    *ngIf="!isLoading && presentationScreen"
+    class="skip-crawl"
+    (click)="skipCrawl()"
+  >skip &gt;&gt;</span>
+
 </section>

@@ -23,10 +23,24 @@ export class HttpService {
   // Constructor method.
   constructor(private http: HttpClient) { }
 
-  // Get basic film info.
+  // Get current films.
   public getFilmsFull(): Observable<HttpResponse<any>> {
 
     return this.http.get<any>(this.apiFilms, { observe: 'response' });
+
+  }
+
+  // Get all characters.
+  public getCharacters(): Observable<HttpResponse<any>> {
+
+    return this.http.get<any>(this.apiPeople, { observe: 'response' });
+
+  }
+
+  // Get characters for a film.
+  public getFilmCharacters(episodeId: number): Observable<HttpResponse<any>> {
+
+    return this.http.get<any>(this.apiFilms + episodeId, { observe: 'response' });
 
   }
 

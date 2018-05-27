@@ -72,6 +72,14 @@
     z-index: 1000;
   }
 
+  .skip-crawl {
+    cursor: pointer;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    z-index: 1000;
+  }
+
   // Crawl content.
   .presentation-crawl {
 

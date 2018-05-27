@@ -305,6 +305,14 @@ export class HomeComponent implements OnDestroy, OnInit {
 
   }
 
+  // Skip crawl intro.
+  public skipCrawl(): void {
+
+    this.allowTransiction = false;
+    this.volumeDown(0.4);
+
+  }
+
   // Called when window is resized.
   public onResize(): void {
 

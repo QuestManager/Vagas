@@ -1,3 +1,39 @@
-<p>
-  characters works!
-</p>
+<section class="characters-container">
+
+  <!-- Return to home. -->
+  <img
+  *ngIf="!isLoading"
+  class="img-home"
+  src="assets/images/rebel.png"
+  (mouseenter)="showTooltip()"
+  (mouseleave)="hideTooltip()"
+  (click)="goToHome()"
+  [@homeLinkAnimation]
+  >
+  <div id="tooltipo-home" class="tooltip">Return to home page</div>
+
+  <!-- Dynamic content. -->
+  <div *ngIf="!isLoading" class="dynamic-content">
+
+    <!-- Characters list. -->
+    <div class="char-list">
+
+      <div *ngFor="let char of characters; let i = index;" class="char-list-item">
+        {{char.name}}
+      </div>
+
+    </div>
+    <!-- /char-list. -->
+
+    <!-- Characters info. -->
+    <div class="char-info">
+
+      aaa
+
+    </div>
+    <!-- /char-info. -->
+
+  </div>
+  <!-- /dynamic-content. -->
+
+</section>

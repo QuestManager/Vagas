@@ -1,0 +1,84 @@
+@import '../../assets/styles/main.scss';
+
+/**
+* Container for main page content.
+**/
+.characters-container {
+
+  // Link to home.
+  .img-home {
+    cursor: pointer;
+    left: 10px;
+    position: absolute;
+    top: 10px;
+    width: 40px;
+    z-index: 1000;
+  }
+
+  // Tooltip for link to home.
+  .tooltip {
+    visibility: hidden;
+    background-color: $gray-custom;
+    border-radius: 3px;
+    color: $yellow-custom;
+    padding: 5px;
+    position: absolute;
+  }
+
+  // Dynamic content container.
+  .dynamic-content {
+
+    color: $black-custom;
+    display: flex;
+    margin: 40px auto 0;
+    width: 80%;
+
+    // Characters list.
+    .char-list {
+
+      float: left;
+
+      max-height: 450px;
+      overflow-y: scroll;
+      padding-right: 10px;
+
+      .char-list-item {
+
+        background-color: $yellow-custom;
+        border: 1px solid $black-custom;
+        cursor: pointer;
+        margin-bottom: 20px;
+        padding: 13px 10px 10px;
+        text-transform: uppercase;
+
+        &:hover { 
+          border-color: $orange-custom;
+          color: $orange-custom;
+        }
+
+      }
+
+    }
+
+    // Characters info.
+    .char-info {
+      display: flex;
+      padding-left: 20px;
+      width: 100%;
+    }
+
+    /* width */
+    ::-webkit-scrollbar { width: 10px; }
+
+    /* Track */
+    ::-webkit-scrollbar-track { background: $yellow-custom; }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb { background: $orange-custom; }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover { background: $orange-custom; }
+
+  }
+
+}
