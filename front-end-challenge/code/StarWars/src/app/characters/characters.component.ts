@@ -118,6 +118,7 @@ export class CharactersComponent implements OnChanges, OnDestroy, OnInit {
   loadFilms: boolean = false;
   loadVehicles: boolean = false;
   loadStarships: boolean = false;
+  waitingForCharData: boolean = false;
 
   // Constructor method.
   constructor(
@@ -180,6 +181,7 @@ export class CharactersComponent implements OnChanges, OnDestroy, OnInit {
     this.films = [];
     this.rawCharacters = [];
     this.characters = [];
+    this.selCharacters = [];
     this.charsToLoad = 0;
     this.charsLoaded = 1;
 
@@ -212,8 +214,9 @@ export class CharactersComponent implements OnChanges, OnDestroy, OnInit {
 
         if (item.id === this.activeFilm.episode_id) {
 
-          this.rawCharacters = item.rawCharacters;
-          this.characters = item.characters;
+          this.rawCharacters = item.rawCharacters || [];
+          this.characters = item.characters || [];
+          this.selCharacters = item.selCharacters || [];
           this.activeFilm = <IFilm>{
             episode_id: item.id,
             title: item.title,
@@ -292,7 +295,8 @@ export class CharactersComponent implements OnChanges, OnDestroy, OnInit {
             title: this.activeFilm.title,
             url: this.activeFilm.url,
             rawCharacters: this.rawCharacters,
-            characters: []
+            characters: [],
+            selCharacters: []
           };
 
           let lMovies: ILocalFilm[] = [];
@@ -518,6 +522,24 @@ export class CharactersComponent implements OnChanges, OnDestroy, OnInit {
     listItem.classList.remove('selectedCharItem');
     listItem.setAttribute('mwlDraggable', '');
 
+    // Remove from storage.
+    const localMovieData: string = localStorage.getItem('movies_data');
+    if (localMovieData) {
+
+      const localMovies: ILocalFilm[] = JSON.parse(localMovieData);
+      localMovies.forEach((el, ind) => {
+        if (el.id === this.activeFilm.episode_id) {
+          const localMovie: ILocalFilm = el;
+          localMovies.splice(ind, 1);
+          localMovie.selCharacters = this.selCharacters;
+          localMovies.push(localMovie);
+          localStorage.setItem('movies_data', JSON.stringify(localMovies));
+          this.waitingForCharData = false;
+        }
+      });
+
+    }
+
     // Decrease next z-index value.
     this.nextZindex--;
 
@@ -525,6 +547,8 @@ export class CharactersComponent implements OnChanges, OnDestroy, OnInit {
 
   // Load characters data.
   private getAllCharactersData(char: IPeople): void {
+
+    this.waitingForCharData = true;
 
     // Get homeworld.
     if (char.homeworld) {
@@ -568,6 +592,48 @@ export class CharactersComponent implements OnChanges, OnDestroy, OnInit {
 
   }
 
+  // Store locally character data.
+  private storeCharacterData(char: IPeople): void {
+
+    if (
+      this.waitingForCharData &&
+      char.loadedFilms &&
+      char.loadedHomeworld &&
+      char.loadedSpecies &&
+      char.loadedStarships &&
+      char.loadedVehicles
+    ) {
+
+      const localMovieData: string = localStorage.getItem('movies_data');
+
+      if (localMovieData) {
+
+        const localMovies: ILocalFilm[] = JSON.parse(localMovieData);
+        localMovies.forEach((item, index) => {
+          if (item.id === this.activeFilm.episode_id) {
+            const localMovie: ILocalFilm = item;
+            localMovies.splice(index, 1);
+            localMovie.selCharacters = this.selCharacters;
+            localMovies.push(localMovie);
+            localStorage.setItem('movies_data', JSON.stringify(localMovies));
+            this.waitingForCharData = false;
+          }
+        });
+
+      }
+
+    } else {
+
+      setTimeout(() => {
+        if (this.waitingForCharData) {
+          this.storeCharacterData(char);
+        }
+      }, 1000);
+
+    }
+
+  }
+
   // Get homeworld data.
   private getHomeworld(char: IPeople): void {
 
@@ -582,6 +648,7 @@ export class CharactersComponent implements OnChanges, OnDestroy, OnInit {
           if (this.selCharacters[i].url === char.url) {
             this.selCharacters[i].homeworld = planet.name;
             this.selCharacters[i].loadedHomeworld = true;
+            this.storeCharacterData(char);
             return;
           }
         }
@@ -627,6 +694,7 @@ export class CharactersComponent implements OnChanges, OnDestroy, OnInit {
             if (this.selCharacters[i].url === char.url) {
               this.selCharacters[i].species = list;
               this.selCharacters[i].loadedSpecies = true;
+              this.storeCharacterData(char);
               return;
             }
           }
@@ -678,6 +746,7 @@ export class CharactersComponent implements OnChanges, OnDestroy, OnInit {
             if (this.selCharacters[i].url === char.url) {
               this.selCharacters[i].films = list;
               this.selCharacters[i].loadedFilms = true;
+              this.storeCharacterData(char);
               return;
             }
           }
@@ -725,6 +794,7 @@ export class CharactersComponent implements OnChanges, OnDestroy, OnInit {
             if (this.selCharacters[i].url === char.url) {
               this.selCharacters[i].vehicles = list;
               this.selCharacters[i].loadedVehicles = true;
+              this.storeCharacterData(char);
               return;
             }
           }
@@ -772,6 +842,7 @@ export class CharactersComponent implements OnChanges, OnDestroy, OnInit {
             if (this.selCharacters[i].url === char.url) {
               this.selCharacters[i].starships = list;
               this.selCharacters[i].loadedStarships = true;
+              this.storeCharacterData(char);
               return;
             }
           }

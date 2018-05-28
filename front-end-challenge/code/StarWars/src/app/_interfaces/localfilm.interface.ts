@@ -8,4 +8,5 @@ export interface ILocalFilm {
   url: string; // Film URL.
   rawCharacters: string[]; // Characters URL.
   characters: IPeople[]; // Characters list of current film.
+  selCharacters: IPeople[]; // Previously selected characters.
 }
