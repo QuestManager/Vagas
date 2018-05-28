@@ -125,28 +125,51 @@ export class HomeComponent implements OnDestroy, OnInit {
     // Generate background stars.
     this.generateStars();
 
-    this.http.getAllFilms().subscribe(
-      res => {
+    // Try to get films locally.
+    const localFilms: string = localStorage.getItem('home_movies');
 
-        // this.films = {...<IFilm>res.body.results};
-        res.body.results.forEach((item) => {
-          this.films.push(<IFilm>item);
-        });
-        this.films.sort((a, b) => a.episode_id - b.episode_id).slice();
-        this.activeFilm = this.films[0];
+    if (localFilms) {
 
-        // Loader.
-        this.isLoading = false;
+      // Get local films.
+      this.films = JSON.parse(localFilms);
 
-      },
-      err => {
+      // Get active film.
+      this.activeFilm = this.films.filter(x => x.isActive )[0] || this.films[0];
 
-        // Show error.
-        alert('Erro ao carregar os filmes');
-        console.log(err);
+      // Loader.
+      this.isLoading = false;
 
-      }
-    );
+    } else {
+
+      this.http.getAllFilms().subscribe(
+        res => {
+
+          // this.films = {...<IFilm>res.body.results};
+          res.body.results.forEach((item) => {
+            item.isActive = false;
+            this.films.push(<IFilm>item);
+          });
+          this.films.sort((a, b) => a.episode_id - b.episode_id).slice();
+          this.activeFilm = this.films[0];
+          this.films[0].isActive = true;
+
+          // Store locally.
+          localStorage.setItem('home_movies', JSON.stringify(this.films));
+
+          // Loader.
+          this.isLoading = false;
+
+        },
+        err => {
+
+          // Show error.
+          alert('Erro ao carregar os filmes');
+          console.log(err);
+
+        }
+      );
+
+    }
 
   }
 
@@ -177,13 +200,27 @@ export class HomeComponent implements OnDestroy, OnInit {
     // List length.
     const listLen: number = this.films.length;
 
+    // Remove any active flag.
+    this.films.forEach((item) => item.isActive = false);
+
     // Get and select previous.
     for (let i = 0; i < listLen; i++) {
+
       if (this.films[i].episode_id === curId) {
-        this.activeFilm = i === 0 ? this.films[listLen - 1] : this.films[i - 1];
-        break;
+
+        // Get previous index.
+        const index: number = i === 0 ? listLen - 1 : i - 1;
+
+        // Set previous film as active.
+        this.films[index].isActive = true;
+        this.activeFilm = this.films[index];
+
       }
+
     }
+
+    // Store locally.
+    localStorage.setItem('home_movies', JSON.stringify(this.films));
 
   }
 
@@ -196,13 +233,27 @@ export class HomeComponent implements OnDestroy, OnInit {
     // List length.
     const listLen: number = this.films.length;
 
+    // Remove any active flag.
+    this.films.forEach((item) => item.isActive = false);
+
     // Get and select previous.
     for (let i = 0; i < listLen; i++) {
+
       if (this.films[i].episode_id === curId) {
-        this.activeFilm = i === (listLen - 1) ? this.films[0] : this.films[i + 1];
-        break;
+
+        // Get next index.
+        const index: number = i === (listLen - 1) ? 0 : i + 1;
+
+        // Set next film as active.
+        this.films[index].isActive = true;
+        this.activeFilm = this.films[index];
+
       }
+
     }
+
+    // Store locally.
+    localStorage.setItem('home_movies', JSON.stringify(this.films));
 
   }
 

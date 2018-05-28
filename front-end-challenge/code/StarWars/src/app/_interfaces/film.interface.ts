@@ -15,6 +15,7 @@ export interface IFilm {
   url: string; // the hypermedia URL of this resource.
   created: string; // the ISO 8601 date format of the time that this resource was created.
   edited: string; // the ISO 8601 date format of the time that this resource was edited.
+  isActive: boolean; // Holds 'true' if this is the current active film.
 }
 
 // Interface for short films data.

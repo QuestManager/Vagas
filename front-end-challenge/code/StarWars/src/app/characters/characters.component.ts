@@ -6,6 +6,7 @@ import { nextTick } from 'q';
 
 // Interfaces.
 import { IFilm } from '_interfaces/film.interface';
+import { ILocalFilm } from '_interfaces/localfilm.interface';
 import { IPeople } from '_interfaces/people.interface';
 import { IPlanet } from '_interfaces/planet.interface';
 import { ISpecies } from '_interfaces/species.interface';
@@ -182,55 +183,145 @@ export class CharactersComponent implements OnChanges, OnDestroy, OnInit {
     this.charsToLoad = 0;
     this.charsLoaded = 1;
 
-    // Get all films.
-    this.http.getAllFilms().subscribe(
-      result => {
+    // Search for local films list.
+    let filmsFoundLocally: boolean = false;
+    const localFilmsStr: string = localStorage.getItem('home_movies');
 
-        // this.films = {...<IFilm>res.body.results};
-        result.body.results.forEach((item) => {
-          this.films.push(<IFilm>item);
-        });
-        this.films.sort((a, b) => a.episode_id - b.episode_id).slice();
+    if (localFilmsStr) {
 
-        // Get film data.
-        this.http.getFilmCharacters(this.filmId).subscribe(
-          res => {
+      this.films = JSON.parse(localFilmsStr);
+      this.films.forEach(item => {
+        if (this.filmId === this.filmService.getFilmId(item.url)) {
+          this.activeFilm = item;
+          return;
+        }
+      });
+      filmsFoundLocally = true;
 
-            // Store film data.
-            this.activeFilm = <IFilm>res.body;
+    }
 
-            // Store characters of current film.
-            this.rawCharacters = this.activeFilm.characters;
-            this.charsToLoad = this.rawCharacters.length;
+    // Search for local current film data.
+    let movieFoundLocally: boolean = false;
+    const localMoviesStr: string = localStorage.getItem('movies_data');
 
-            // Update last ID.
-            this.lastId = this.filmId;
+    if (localMoviesStr) {
 
-            // Get all characters data.
-            this.getCharactersData();
+      const localMovies: ILocalFilm[] = JSON.parse(localMoviesStr);
 
-          },
-          err => {
+      localMovies.forEach(item => {
 
-            // Show error.
-            alert('Search film error.');
-            console.log(err);
+        if (item.id === this.activeFilm.episode_id) {
 
-            // Loader.
-            this.isLoading = false;
+          this.rawCharacters = item.rawCharacters;
+          this.characters = item.characters;
+          this.activeFilm = <IFilm>{
+            episode_id: item.id,
+            title: item.title,
+            url: item.url
+          };
 
-          }
-        );
+          // Update last ID.
+          this.lastId = this.filmId;
 
-      },
-      error => {
+          // Movie is found.
+          movieFoundLocally = true;
 
-        // Show error.
-        alert('Search films error');
-        console.log(error);
+        }
+
+      });
+
+      if (filmsFoundLocally && movieFoundLocally) {
+
+        // Get all characters data.
+        if (this.characters.length === 0) {
+          this.getCharactersData();
+        } else {
+          this.isLoading = false;
+        }
 
       }
-    );
+
+    }
+
+    if (!filmsFoundLocally) {
+
+      // Get all films.
+      this.http.getAllFilms().subscribe(
+        result => {
+
+          // this.films = {...<IFilm>res.body.results};
+          result.body.results.forEach((item) => {
+            this.films.push(<IFilm>item);
+          });
+          this.films.sort((a, b) => a.episode_id - b.episode_id).slice();
+
+        },
+        error => {
+
+          // Show error.
+          alert('Search films error');
+          console.log(error);
+
+          // Loader.
+          this.isLoading = false;
+
+        }
+      );
+
+    }
+
+    if (!movieFoundLocally) {
+
+      // Get film data.
+      this.http.getFilmCharacters(this.filmId).subscribe(
+        res => {
+
+          // Store film data.
+          this.activeFilm = <IFilm>res.body;
+
+          // Store characters of current film.
+          this.rawCharacters = this.activeFilm.characters;
+          this.charsToLoad = this.rawCharacters.length;
+
+          // Update last ID.
+          this.lastId = this.filmId;
+
+          // Store locally.
+          const mv = <ILocalFilm>{
+            id: this.activeFilm.episode_id,
+            title: this.activeFilm.title,
+            url: this.activeFilm.url,
+            rawCharacters: this.rawCharacters,
+            characters: []
+          };
+
+          let lMovies: ILocalFilm[] = [];
+          if (localMoviesStr) {
+            lMovies = JSON.parse(localMoviesStr);
+            lMovies.push(mv);
+          } else {
+            lMovies.push(mv);
+          }
+
+          localStorage.setItem('movies_data', JSON.stringify(lMovies));
+
+          // Get all characters data.
+          this.getCharactersData();
+
+        },
+        err => {
+
+          // Show error.
+          alert('Search film error.');
+          console.log(err);
+
+          // Loader.
+          this.isLoading = false;
+
+        }
+      );
+
+    }
 
   }
 
@@ -265,6 +356,24 @@ export class CharactersComponent implements OnChanges, OnDestroy, OnInit {
       );
 
     } else {
+
+      const localFilmsStr: string = localStorage.getItem('movies_data');
+
+      if (localFilmsStr) {
+
+        const localMovies: ILocalFilm[] = JSON.parse(localFilmsStr);
+
+        localMovies.forEach((item, index) => {
+
+          if (item.id === this.activeFilm.episode_id) {
+            localMovies[index].characters = this.characters;
+            localStorage.setItem('movies_data', JSON.stringify(localMovies));
+            return;
+          }
+
+        });
+
+      }
 
       // Loader.
       this.isLoading = false;
@@ -392,7 +501,6 @@ export class CharactersComponent implements OnChanges, OnDestroy, OnInit {
       }, 100);
 
     }
-    console.log(this.selCharacters);
 
   }
 
