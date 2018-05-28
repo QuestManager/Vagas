@@ -7,7 +7,7 @@
     <!-- Espisodes list. -->
     <div class="presentation films_list">
       <span (click)="previousFilm()">&lt;</span>
-      Episode {{activeFilm.episode_id}}
+      Episode {{filmService.getRomanNumeral(activeFilm.episode_id)}}
       <span (click)="nextFilm()">&gt;</span>
     </div>
 
@@ -46,7 +46,7 @@
       <!-- Opening crawl. -->
       <div class="crawl-text">
         <div id="crawl-content">
-          <p>Episode {{activeFilm.episode_id}}</p>
+          <p>Episode {{filmService.getRomanNumeral(activeFilm.episode_id)}}</p>
           <h1>{{activeFilm.title}}</h1>
           <p>{{activeFilm.opening_crawl}}</p>
         </div>
@@ -61,7 +61,7 @@
       <div class="transiction-logo">
         <div class="presentation-text fixed_text">Star</div>
         <div class="presentation-text fixed_text">Wars</div>
-        <div class="presentation-text subtitle">Episode {{activeFilm.episode_id}} - {{activeFilm.title}}</div>
+        <div class="presentation-text subtitle">Episode {{filmService.getRomanNumeral(activeFilm.episode_id)}} - {{activeFilm.title}}</div>
       </div>
 
       <!-- Progress bar. -->
@@ -95,6 +95,6 @@
     *ngIf="!isLoading && presentationScreen"
     class="skip-crawl"
     (click)="skipCrawl()"
-  >skip &gt;&gt;</span>
+  >{{isSkipping ? 'skipping...' : 'skip &gt;&gt;'}}</span>
 
 </section>

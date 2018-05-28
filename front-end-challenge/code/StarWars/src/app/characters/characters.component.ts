@@ -550,7 +550,9 @@ export class CharactersComponent implements OnChanges, OnDestroy, OnInit {
         const curValue: IFilm = <IFilm>result.body;
 
         // Store current value.
-        list.push(curValue.title);
+        const year: number = new Date(curValue.release_date).getFullYear();
+        const episode: string = this.filmService.getRomanNumeral(curValue.episode_id);
+        list.push('(' + year + ') ' + episode + ' - ' + (curValue.title).replace(',', ''));
 
         // Remove current from waiting list.
         char.films.shift();
@@ -560,6 +562,8 @@ export class CharactersComponent implements OnChanges, OnDestroy, OnInit {
           this.getFilms(char, list);
 
         } else {
+
+          list.sort();
 
           // Update character value.
           for (let i = 0; i < this.selCharacters.length; i++) {

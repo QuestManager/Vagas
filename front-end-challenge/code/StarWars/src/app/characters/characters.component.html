@@ -20,7 +20,7 @@
   <!-- Current film name and film selection. -->
   <div *ngIf="!isLoading" class="film-title" [@enterAnimation]>
     <span (click)="previousFilm()">&#8672;</span>
-    <h1>Episode {{activeFilm.episode_id}} - {{activeFilm.title}}</h1>
+    <h1>Episode {{filmService.getRomanNumeral(activeFilm.episode_id)}} - {{activeFilm.title}}</h1>
     <span (click)="nextFilm()">&#8674;</span>
   </div>
 
@@ -57,7 +57,7 @@
         (dragLeave)="dropOverActive = false"
         (drop)="dropped($event.dropData)"
       >
-        <span [hidden]="droppedData">Drop here an character to see his data.</span>
+        <span [hidden]="droppedData">Drop here a character.</span>
         <span [hidden]="!droppedData">{{ droppedData }}</span>
       </div>
       <!-- /dropContainer. -->

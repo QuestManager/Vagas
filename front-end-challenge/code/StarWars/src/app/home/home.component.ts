@@ -98,6 +98,7 @@ export class HomeComponent implements OnDestroy, OnInit {
 
   // Status.
   isLoading: boolean = false;
+  isSkipping: boolean = false;
   presentationScreen: boolean = false;
   onTransiction: boolean = false;
   allowTransiction: boolean = false;
@@ -247,40 +248,51 @@ export class HomeComponent implements OnDestroy, OnInit {
   }
 
   // Before transiction to characters page.
-  public beforeTransiction(): void {
+  public beforeTransiction(volumeLevel: number = 0.8): void {
 
     if (this.allowTransiction) {
 
-      // Change status.
-      this.isLoading = false;
-      this.presentationScreen = false;
-      this.onTransiction = true;
-
-      // Change container style.
-      const container: HTMLElement = document.getElementById('crawl-container');
-      container.classList.add('crawl-transiction');
+      // Show transiction screen.
+      this.showTransiction();
 
       // Volume down.
-      this.volumeDown();
+      this.volumeDown(volumeLevel);
 
     }
 
   }
 
+  // Show transiction screen.
+  public showTransiction(): void {
+
+    // Change status.
+    this.isLoading = false;
+    this.presentationScreen = false;
+    this.onTransiction = true;
+
+    // Change container style.
+    const container: HTMLElement = document.getElementById('crawl-container');
+    container.classList.add('crawl-transiction');
+
+  }
+
   // Turn down audio volume.
-  public volumeDown(level: number = 0.8): void {
+  public volumeDown(level: number = 0.8, timer?: number): void {
+
+    // Set timer value.
+    timer = timer || 1000;
 
     const audio: HTMLAudioElement = <HTMLAudioElement>document.getElementById('startwars_theme');
     audio.volume = level > 0 ? level : 0;
 
     if (audio.volume > 0) {
 
-      setTimeout(() => { this.volumeDown(level - 0.2); }, 1500);
+      setTimeout(() => { this.volumeDown(level - 0.2, timer); }, 1500);
 
     } else {
 
       // Change page.
-      setTimeout(() => { this.goToPage('characters'); }, 1000);
+      setTimeout(() => { this.goToPage('characters'); }, timer);
 
     }
 
@@ -311,8 +323,14 @@ export class HomeComponent implements OnDestroy, OnInit {
   // Skip crawl intro.
   public skipCrawl(): void {
 
-    this.allowTransiction = false;
-    this.volumeDown(0.4);
+    this.isSkipping = true;
+    this.allowTransiction = true;
+
+    // Volume down.
+    this.volumeDown(0.4, 4000);
+
+    // Show transiction screen.
+    this.showTransiction();
 
   }
 
