@@ -17,4 +17,9 @@ export interface IPeople {
   url: string; // the hypermedia URL of this resource.
   created: string; // the ISO 8601 date format of the time that this resource was created.
   edited: string; // the ISO 8601 date format of the time that this resource was edited.
+  loadedHomeworld: boolean; // If homeworld data is loaded.
+  loadedSpecies: boolean; // If species data is loaded.
+  loadedFilms: boolean; // If films data are loaded.
+  loadedVehicles: boolean; // If vehicles data are loaded.
+  loadedStarships: boolean; // If starships data are loaded.
 }

@@ -2,18 +2,26 @@
 
   <!-- Return to home. -->
   <img
-  *ngIf="!isLoading"
-  class="img-home"
-  src="assets/images/rebel.png"
-  (mouseenter)="showTooltip()"
-  (mouseleave)="hideTooltip()"
-  (click)="goToHome()"
-  [@homeLinkAnimation]
+    class="img-home"
+    src="assets/images/rebel.png"
+    (mouseenter)="showTooltip()"
+    (mouseleave)="hideTooltip()"
+    (click)="goToHome()"
+    [@homeLinkAnimation]
   >
   <div id="tooltipo-home" class="tooltip">Return to home page</div>
 
+  <!-- Main progress info. -->
+  <div *ngIf="isLoading" class="progress-info">
+    <progress></progress>
+    <p>Loading characters <span *ngIf="charsToLoad > 0">({{charsLoaded}}/{{charsToLoad}})</span></p>
+  </div>
+
+  <!-- Current film name and film selection. -->
   <div *ngIf="!isLoading" class="film-title" [@enterAnimation]>
-    <h1>Episode {{film.episode_id}} - {{film.title}}</h1>
+    <span (click)="previousFilm()">&#8672;</span>
+    <h1>Episode {{activeFilm.episode_id}} - {{activeFilm.title}}</h1>
+    <span (click)="nextFilm()">&#8674;</span>
   </div>
 
   <!-- Dynamic content. -->
@@ -62,12 +70,15 @@
         [@charDetailsAnimation]
       >
         
+        <!-- Close character info button. -->
         <div class="close-details" (click)="removeItem(char.url)">
           X
         </div>
 
+        <!-- Character name. -->
         <h1>{{char.name}}</h1>
 
+        <!-- Character details. -->
         <div class="details">
 
           <!-- Left items. -->
@@ -84,14 +95,15 @@
 
           <!-- Right items. -->
           <div style="float: right; width: 50%;">
-            <p><span>Homeworld</span> {{char.homeworld}}</p>
-            <p><span>Species</span> {{char.species}}</p>
-            <p><span>Films</span> {{char.films | arrayJoin:", "}}</p>
-            <p><span>Vehicles</span> {{char.vehicles | arrayJoin:", "}}</p>
-            <p><span>Starships</span> {{char.starships | arrayJoin:", "}}</p>
+            <p><span>Homeworld</span> {{char.loadedHomeworld ? (char.homeworld || N/A) : 'loading...'}}</p>
+            <p><span>Species</span> {{char.loadedSpecies ? (char.species || 'N/A') : 'loading...'}}</p>
+            <p><span>Films</span> {{char.loadedFilms ? (char.films | arrayJoin:", " || 'N/A') : 'loading...'}}</p>
+            <p><span>Vehicles</span> {{char.loadedVehicles ? (char.vehicles | arrayJoin:", " || 'N/A') : 'loading...'}}</p>
+            <p><span>Starships</span> {{char.loadedStarships ? (char.starships | arrayJoin:", " || 'N/A') : 'loading...'}}</p>
           </div>
 
         </div>
+        <!-- /details. -->
 
       </div>
       <!-- /char-details. -->

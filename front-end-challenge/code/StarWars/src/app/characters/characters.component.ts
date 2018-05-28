@@ -1,15 +1,20 @@
 // Angular modules.
 import { ActivatedRoute, Router, RouterLinkActive } from '@angular/router';
 import { animate, animateChild, query, state, style, transition, trigger } from '@angular/animations';
-import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { nextTick } from 'q';
 
 // Interfaces.
 import { IFilm } from '_interfaces/film.interface';
 import { IPeople } from '_interfaces/people.interface';
+import { IPlanet } from '_interfaces/planet.interface';
+import { ISpecies } from '_interfaces/species.interface';
+import { IStarship } from '_interfaces/starship.interface';
+import { IVehicle } from '_interfaces/vehicle.interface';
 
 // Services.
+import { FilmService } from '_services/film/film.service';
 import { HttpService } from '_services/http/http.service';
-import { nextTick } from 'q';
 
 // Render generic animation.
 const enterAnimation =
@@ -84,14 +89,17 @@ const homeLinkAnimation =
   styleUrls: ['./characters.component.scss'],
   animations: [enterAnimation, charDetailsAnimation, contentAnimation, homeLinkAnimation]
 })
-export class CharactersComponent implements OnDestroy, OnInit {
+export class CharactersComponent implements OnChanges, OnDestroy, OnInit {
 
   // Class of current body.
   bodyClass: string = 'characters_page';
 
   // Movie related.
-  filmeId: number;
-  film: IFilm;
+  lastId: number;
+  filmId: number;
+  activeFilm: IFilm;
+  films: IFilm[] = [];
+  rawCharacters: string[] = [];
   characters: IPeople[] = [];
 
   // Drag and drop related.
@@ -102,9 +110,17 @@ export class CharactersComponent implements OnDestroy, OnInit {
 
   // Status.
   isLoading: boolean = false;
+  charsToLoad: number = 0;
+  charsLoaded: number = 1;
+  loadHomeworld: boolean = false;
+  loadSpecies: boolean = false;
+  loadFilms: boolean = false;
+  loadVehicles: boolean = false;
+  loadStarships: boolean = false;
 
   // Constructor method.
   constructor(
+    private filmService: FilmService,
     private http: HttpService,
     private renderer: Renderer2,
     private route: ActivatedRoute,
@@ -124,57 +140,23 @@ export class CharactersComponent implements OnDestroy, OnInit {
       if (params['id']) {
 
         // Store film ID.
-        this.filmeId = parseInt(params['id'], 10);
+        this.filmId = parseInt(params['id'], 10);
 
-        // Get film data.
-        this.http.getFilmCharacters(this.filmeId).subscribe(
-          result => {
-
-            // Store film data.
-            this.film = <IFilm>result.body;
-            console.log(this.film);
-
-            // Get all characters.
-            this.http.getCharacters().subscribe(
-              res => {
-
-                // Store items.
-                res.body.results.forEach((item) => {
-                  this.characters.push(<IPeople>item);
-                });
-
-                // Loader.
-                this.isLoading = false;
-
-              },
-              err => {
-
-                // Show error.
-                alert('Search characters error.');
-                console.log(err);
-
-                // Loader.
-                this.isLoading = false;
-
-              }
-            );
-
-          },
-          error => {
-
-            // Show error.
-            alert('Search film error.');
-            console.log(error);
-
-            // Loader.
-            this.isLoading = false;
-
-          }
-        );
+        this.getAllData();
 
       }
 
     });
+
+  }
+
+  // On changes.
+  public ngOnChanges() {
+
+    if (this.filmId !== this.lastId) {
+      this.isLoading = true;
+      this.getAllData();
+    }
 
   }
 
@@ -188,6 +170,108 @@ export class CharactersComponent implements OnDestroy, OnInit {
 
   // On init.
   ngOnInit() {}
+
+  // Get all data.
+  private getAllData(): void {
+
+    // Clear previous data.
+    this.activeFilm = null;
+    this.films = [];
+    this.rawCharacters = [];
+    this.characters = [];
+    this.charsToLoad = 0;
+    this.charsLoaded = 1;
+
+    // Get all films.
+    this.http.getAllFilms().subscribe(
+      result => {
+
+        // this.films = {...<IFilm>res.body.results};
+        result.body.results.forEach((item) => {
+          this.films.push(<IFilm>item);
+        });
+        this.films.sort((a, b) => a.episode_id - b.episode_id).slice();
+
+        // Get film data.
+        this.http.getFilmCharacters(this.filmId).subscribe(
+          res => {
+
+            // Store film data.
+            this.activeFilm = <IFilm>res.body;
+
+            // Store characters of current film.
+            this.rawCharacters = this.activeFilm.characters;
+            this.charsToLoad = this.rawCharacters.length;
+
+            // Update last ID.
+            this.lastId = this.filmId;
+
+            // Get all characters data.
+            this.getCharactersData();
+
+          },
+          err => {
+
+            // Show error.
+            alert('Search film error.');
+            console.log(err);
+
+            // Loader.
+            this.isLoading = false;
+
+          }
+        );
+
+      },
+      error => {
+
+        // Show error.
+        alert('Search films error');
+        console.log(error);
+
+      }
+    );
+
+  }
+
+  // Get data of current film characters.
+  private getCharactersData(): void {
+
+    if (this.rawCharacters.length > 0) {
+
+      this.http.getCharacter(this.rawCharacters[0]).subscribe(
+        result => {
+
+          // Store character.
+          this.characters.push(<IPeople>result.body);
+
+          // Remove item from raw list.
+          this.rawCharacters.shift();
+
+          // Increment total loaded.
+          this.charsLoaded++;
+
+          // Get next character data.
+          this.getCharactersData();
+
+        },
+        error => {
+
+          // Show error.
+          alert('Error while searching character');
+          console.log(error);
+
+        }
+      );
+
+    } else {
+
+      // Loader.
+      this.isLoading = false;
+
+    }
+
+  }
 
   // Show tooltip.
   public showTooltip() {
@@ -211,6 +295,58 @@ export class CharactersComponent implements OnDestroy, OnInit {
 
   }
 
+  // Show previous film.
+  public previousFilm(): void {
+
+    // Loader.
+    this.isLoading = true;
+
+    // Current episode ID.
+    const curId: number = this.activeFilm.episode_id;
+
+    // List length.
+    const listLen: number = this.films.length;
+
+    // Get and select previous.
+    for (let i = 0; i < listLen; i++) {
+      if (this.films[i].episode_id === curId) {
+        this.activeFilm = i === 0 ? this.films[listLen - 1] : this.films[i - 1];
+        break;
+      }
+    }
+
+    // Go to previous film.
+    const nextId: number = this.filmService.getFilmId(this.activeFilm.url);
+    this.router.navigate(['characters', nextId]);
+
+  }
+
+  // Show next film.
+  public nextFilm(): void {
+
+    // Loader.
+    this.isLoading = true;
+
+    // Current episode ID.
+    const curId: number = this.activeFilm.episode_id;
+
+    // List length.
+    const listLen: number = this.films.length;
+
+    // Get and select previous.
+    for (let i = 0; i < listLen; i++) {
+      if (this.films[i].episode_id === curId) {
+        this.activeFilm = i === (listLen - 1) ? this.films[0] : this.films[i + 1];
+        break;
+      }
+    }
+
+    // Go to next film.
+    const nextId: number = this.filmService.getFilmId(this.activeFilm.url);
+    this.router.navigate(['characters', nextId]);
+
+  }
+
   // When a draggable element is dropped.
   public dragEnd(event): void {
 
@@ -229,6 +365,9 @@ export class CharactersComponent implements OnDestroy, OnInit {
 
       // Add item to selected list.
       this.selCharacters.unshift(this.characters.filter((c) => c.url === this.droppedData)[0]);
+
+      // Get all character's data.
+      this.getAllCharactersData(this.selCharacters[0]);
 
       // Change list item style and attributes.
       const listItem: HTMLElement = document.getElementById(this.droppedData);
@@ -273,6 +412,269 @@ export class CharactersComponent implements OnDestroy, OnInit {
 
     // Decrease next z-index value.
     this.nextZindex--;
+
+  }
+
+  // Load characters data.
+  private getAllCharactersData(char: IPeople): void {
+
+    // Get homeworld.
+    if (char.homeworld) {
+      this.getHomeworld(char);
+    } else {
+      char.homeworld = 'N/A';
+      char.loadedHomeworld = true;
+    }
+
+    // Get species.
+    if (char.species.length > 0) {
+      this.getSpecies(char);
+    } else {
+      char.species.push('N/A');
+      char.loadedSpecies = true;
+    }
+
+    // Get films.
+    if (char.films.length > 0) {
+      this.getFilms(char);
+    } else {
+      char.films.push('N/A');
+      char.loadedFilms = true;
+    }
+
+    // Get vehicles.
+    if (char.vehicles.length > 0) {
+      this.getVehicles(char);
+    } else {
+      char.vehicles.push('N/A');
+      char.loadedVehicles = true;
+    }
+
+    // Get starships.
+    if (char.starships.length > 0) {
+      this.getStarships(char);
+    } else {
+      char.starships.push('N/A');
+      char.loadedStarships = true;
+    }
+
+  }
+
+  // Get homeworld data.
+  private getHomeworld(char: IPeople): void {
+
+    this.http.getHomeworld(char.homeworld).subscribe(
+      result => {
+
+        // Store planet data.
+        const planet: IPlanet = <IPlanet>result.body;
+
+        // Update character value.
+        for (let i = 0; i < this.selCharacters.length; i++) {
+          if (this.selCharacters[i].url === char.url) {
+            this.selCharacters[i].homeworld = planet.name;
+            this.selCharacters[i].loadedHomeworld = true;
+            return;
+          }
+        }
+
+      },
+      error => {
+
+        // Show error.
+        alert('Error while searching homeworld');
+        console.log(error);
+
+      }
+    );
+
+  }
+
+  // Get species data.
+  private getSpecies(char: IPeople, list?: string[]): void {
+
+    // Initialize list if none.
+    list = list || [];
+
+    this.http.getSpecies(char.species[0]).subscribe(
+      result => {
+
+        // Get current value.
+        const curValue: ISpecies = <ISpecies>result.body;
+
+        // Store current value.
+        list.push(curValue.name);
+
+        // Remove current from waiting list.
+        char.species.shift();
+
+        if (char.species.length > 0) {
+
+          this.getSpecies(char, list);
+
+        } else {
+
+          // Update character value.
+          for (let i = 0; i < this.selCharacters.length; i++) {
+            if (this.selCharacters[i].url === char.url) {
+              this.selCharacters[i].species = list;
+              this.selCharacters[i].loadedSpecies = true;
+              return;
+            }
+          }
+
+        }
+
+      },
+      error => {
+
+        // Show error.
+        alert('Error while searching species');
+        console.log(error);
+
+      }
+    );
+
+  }
+
+  // Get films data.
+  private getFilms(char: IPeople, list?: string[]): void {
+
+    // Initialize list if none.
+    list = list || [];
+
+    this.http.getFilm(char.films[0]).subscribe(
+      result => {
+
+        // Get current value.
+        const curValue: IFilm = <IFilm>result.body;
+
+        // Store current value.
+        list.push(curValue.title);
+
+        // Remove current from waiting list.
+        char.films.shift();
+
+        if (char.films.length > 0) {
+
+          this.getFilms(char, list);
+
+        } else {
+
+          // Update character value.
+          for (let i = 0; i < this.selCharacters.length; i++) {
+            if (this.selCharacters[i].url === char.url) {
+              this.selCharacters[i].films = list;
+              this.selCharacters[i].loadedFilms = true;
+              return;
+            }
+          }
+
+        }
+
+      },
+      error => {
+
+        // Show error.
+        alert('Error while searching films');
+        console.log(error);
+
+      }
+    );
+
+  }
+
+  // Get vechicles data.
+  private getVehicles(char: IPeople, list?: string[]): void {
+
+    // Initialize list if none.
+    list = list || [];
+
+    this.http.getVehicle(char.vehicles[0]).subscribe(
+      result => {
+
+        // Get current value.
+        const curValue: IVehicle = <IVehicle>result.body;
+
+        // Store current value.
+        list.push(curValue.name);
+
+        // Remove current from waiting list.
+        char.vehicles.shift();
+
+        if (char.vehicles.length > 0) {
+
+          this.getVehicles(char, list);
+
+        } else {
+
+          // Update character value.
+          for (let i = 0; i < this.selCharacters.length; i++) {
+            if (this.selCharacters[i].url === char.url) {
+              this.selCharacters[i].vehicles = list;
+              this.selCharacters[i].loadedVehicles = true;
+              return;
+            }
+          }
+
+        }
+
+      },
+      error => {
+
+        // Show error.
+        alert('Error while searching vehicles');
+        console.log(error);
+
+      }
+    );
+
+  }
+
+  // Get starships data.
+  private getStarships(char: IPeople, list?: string[]): void {
+
+    // Initialize list if none.
+    list = list || [];
+
+    this.http.getStarship(char.starships[0]).subscribe(
+      result => {
+
+        // Get current value.
+        const curValue: IStarship = <IStarship>result.body;
+
+        // Store current value.
+        list.push(curValue.name);
+
+        // Remove current from waiting list.
+        char.starships.shift();
+
+        if (char.starships.length > 0) {
+
+          this.getStarships(char, list);
+
+        } else {
+
+          // Update character value.
+          for (let i = 0; i < this.selCharacters.length; i++) {
+            if (this.selCharacters[i].url === char.url) {
+              this.selCharacters[i].starships = list;
+              this.selCharacters[i].loadedStarships = true;
+              return;
+            }
+          }
+
+        }
+
+      },
+      error => {
+
+        // Show error.
+        alert('Error while searching starships');
+        console.log(error);
+
+      }
+    );
 
   }
 

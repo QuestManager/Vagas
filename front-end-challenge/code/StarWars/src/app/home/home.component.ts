@@ -8,6 +8,7 @@ import { IFilm } from '_interfaces/film.interface';
 
 // Services.
 import { EffectsService } from '_services/effects/effects.service';
+import { FilmService } from '_services/film/film.service';
 import { HttpService } from '_services/http/http.service';
 
 // Render page animation.
@@ -104,6 +105,7 @@ export class HomeComponent implements OnDestroy, OnInit {
   // Constructor method.
   constructor(
     private effects: EffectsService,
+    private filmService: FilmService,
     private http: HttpService,
     private renderer: Renderer2,
     private route: ActivatedRoute,
@@ -122,7 +124,7 @@ export class HomeComponent implements OnDestroy, OnInit {
     // Generate background stars.
     this.generateStars();
 
-    this.http.getFilmsFull().subscribe(
+    this.http.getAllFilms().subscribe(
       res => {
 
         // this.films = {...<IFilm>res.body.results};
@@ -233,7 +235,8 @@ export class HomeComponent implements OnDestroy, OnInit {
     switch (page.toLowerCase()) {
 
       case 'characters':
-        this.router.navigate(['characters', this.activeFilm.episode_id]);
+        const nextId: number = this.filmService.getFilmId(this.activeFilm.url);
+        this.router.navigate(['characters', nextId]);
         break;
 
       default:
