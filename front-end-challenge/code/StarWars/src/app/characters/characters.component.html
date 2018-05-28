@@ -25,7 +25,7 @@
   </div>
 
   <!-- Dynamic content. -->
-  <div *ngIf="!isLoading" class="dynamic-content" [@contentAnimation]>
+  <div *ngIf="!isLoading" class="dynamic-content dc-desktop" [@contentAnimation]>
 
     <!-- Characters list. -->
     <div class="char-list">
@@ -112,6 +112,54 @@
     <!-- /char-info. -->
 
   </div>
-  <!-- /dynamic-content. -->
+  <!-- /dc-desktop. -->
+
+  <!-- Dynamic content (mobile). -->
+  <div *ngIf="!isLoading" class="dynamic-content dc-mobile" [@contentAnimation]>
+
+    <select (change)="mobileSelect($event.target.value)">
+      <option value="-1" disabled>Select a character</option>
+      <option
+        *ngFor="let char of characters; let i = index;"
+        id="{{char.url}}"
+        value="{{char.url}}"
+      >{{char.name}}</option>
+    </select>
+
+    <!-- Selected characters details. -->
+    <div
+      *ngIf="selCharacterMobile as char"
+      class="char-details"
+      [@charDetailsAnimation]
+    >
+
+      {{char.name}}
+
+      <!-- Characters details. -->
+      <div class="details">
+
+        <p><span>Name</span> {{char.name}}</p>
+        <p><span>Height</span> {{char.height | personHeight}} m</p>
+        <p><span>Mass</span> {{char.mass}} kg</p>
+        <p><span>Hair color</span> {{char.hair_color}}</p>
+        <p><span>Skin color</span> {{char.skin_color}}</p>
+        <p><span>Eye color</span> {{char.eye_color}}</p>
+        <p><span>Birth year</span> {{char.birth_year}}</p>
+        <p><span>Gender</span> {{char.gender}}</p>
+
+        <p><span>Homeworld</span> {{char.loadedHomeworld ? (char.homeworld || N/A) : 'loading...'}}</p>
+        <p><span>Species</span> {{char.loadedSpecies ? (char.species || 'N/A') : 'loading...'}}</p>
+        <p><span>Films</span> {{char.loadedFilms ? (char.films | arrayJoin:", " || 'N/A') : 'loading...'}}</p>
+        <p><span>Vehicles</span> {{char.loadedVehicles ? (char.vehicles | arrayJoin:", " || 'N/A') : 'loading...'}}</p>
+        <p><span>Starships</span> {{char.loadedStarships ? (char.starships | arrayJoin:", " || 'N/A') : 'loading...'}}</p>
+
+      </div>
+      <!-- /details. -->
+
+    </div>
+    <!-- /char-details. -->
+
+  </div>
+  <!-- /dc-mobile. -->
 
 </section>

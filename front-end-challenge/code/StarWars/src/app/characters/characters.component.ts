@@ -109,6 +109,9 @@ export class CharactersComponent implements OnChanges, OnDestroy, OnInit {
   selCharacters: IPeople[] = [];
   nextZindex: number = 1200;
 
+  // Mobile only related.
+  selCharacterMobile: IPeople;
+
   // Status.
   isLoading: boolean = false;
   charsToLoad: number = 0;
@@ -508,6 +511,17 @@ export class CharactersComponent implements OnChanges, OnDestroy, OnInit {
 
   }
 
+  // When a character is selected on mobile.
+  public mobileSelect(url: string): void {
+
+    this.selCharacterMobile = null;
+    this.selCharacterMobile = this.characters.filter(x => x.url === url)[0];
+
+    // Get all character's data.
+    this.getAllCharactersData(this.selCharacterMobile, true);
+
+  }
+
   // Remove a selected item.
   public removeItem(item: string): void {
 
@@ -546,13 +560,13 @@ export class CharactersComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   // Load characters data.
-  private getAllCharactersData(char: IPeople): void {
+  private getAllCharactersData(char: IPeople, isMobile: boolean = false): void {
 
     this.waitingForCharData = true;
 
     // Get homeworld.
     if (char.homeworld) {
-      this.getHomeworld(char);
+      this.getHomeworld(char, isMobile);
     } else {
       char.homeworld = 'N/A';
       char.loadedHomeworld = true;
@@ -560,7 +574,7 @@ export class CharactersComponent implements OnChanges, OnDestroy, OnInit {
 
     // Get species.
     if (char.species.length > 0) {
-      this.getSpecies(char);
+      this.getSpecies(char, isMobile);
     } else {
       char.species.push('N/A');
       char.loadedSpecies = true;
@@ -568,7 +582,7 @@ export class CharactersComponent implements OnChanges, OnDestroy, OnInit {
 
     // Get films.
     if (char.films.length > 0) {
-      this.getFilms(char);
+      this.getFilms(char, isMobile);
     } else {
       char.films.push('N/A');
       char.loadedFilms = true;
@@ -576,7 +590,7 @@ export class CharactersComponent implements OnChanges, OnDestroy, OnInit {
 
     // Get vehicles.
     if (char.vehicles.length > 0) {
-      this.getVehicles(char);
+      this.getVehicles(char, isMobile);
     } else {
       char.vehicles.push('N/A');
       char.loadedVehicles = true;
@@ -584,7 +598,7 @@ export class CharactersComponent implements OnChanges, OnDestroy, OnInit {
 
     // Get starships.
     if (char.starships.length > 0) {
-      this.getStarships(char);
+      this.getStarships(char, isMobile);
     } else {
       char.starships.push('N/A');
       char.loadedStarships = true;
@@ -635,7 +649,7 @@ export class CharactersComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   // Get homeworld data.
-  private getHomeworld(char: IPeople): void {
+  private getHomeworld(char: IPeople, isMobile: boolean = false): void {
 
     this.http.getHomeworld(char.homeworld).subscribe(
       result => {
@@ -644,13 +658,23 @@ export class CharactersComponent implements OnChanges, OnDestroy, OnInit {
         const planet: IPlanet = <IPlanet>result.body;
 
         // Update character value.
-        for (let i = 0; i < this.selCharacters.length; i++) {
-          if (this.selCharacters[i].url === char.url) {
-            this.selCharacters[i].homeworld = planet.name;
-            this.selCharacters[i].loadedHomeworld = true;
-            this.storeCharacterData(char);
-            return;
+        if (isMobile) {
+
+          this.selCharacterMobile.homeworld = planet.name;
+          this.selCharacterMobile.loadedHomeworld = true;
+          this.storeCharacterData(char);
+
+        } else {
+
+          for (let i = 0; i < this.selCharacters.length; i++) {
+            if (this.selCharacters[i].url === char.url) {
+              this.selCharacters[i].homeworld = planet.name;
+              this.selCharacters[i].loadedHomeworld = true;
+              this.storeCharacterData(char);
+              return;
+            }
           }
+
         }
 
       },
@@ -666,7 +690,7 @@ export class CharactersComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   // Get species data.
-  private getSpecies(char: IPeople, list?: string[]): void {
+  private getSpecies(char: IPeople, isMobile: boolean = false, list?: string[]): void {
 
     // Initialize list if none.
     list = list || [];
@@ -685,18 +709,28 @@ export class CharactersComponent implements OnChanges, OnDestroy, OnInit {
 
         if (char.species.length > 0) {
 
-          this.getSpecies(char, list);
+          this.getSpecies(char, isMobile, list);
 
         } else {
 
           // Update character value.
-          for (let i = 0; i < this.selCharacters.length; i++) {
-            if (this.selCharacters[i].url === char.url) {
-              this.selCharacters[i].species = list;
-              this.selCharacters[i].loadedSpecies = true;
-              this.storeCharacterData(char);
-              return;
+          if (isMobile) {
+
+            this.selCharacterMobile.species = list;
+            this.selCharacterMobile.loadedSpecies = true;
+            this.storeCharacterData(char);
+
+          } else {
+
+            for (let i = 0; i < this.selCharacters.length; i++) {
+              if (this.selCharacters[i].url === char.url) {
+                this.selCharacters[i].species = list;
+                this.selCharacters[i].loadedSpecies = true;
+                this.storeCharacterData(char);
+                return;
+              }
             }
+
           }
 
         }
@@ -714,7 +748,7 @@ export class CharactersComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   // Get films data.
-  private getFilms(char: IPeople, list?: string[]): void {
+  private getFilms(char: IPeople, isMobile: boolean = false, list?: string[]): void {
 
     // Initialize list if none.
     list = list || [];
@@ -735,20 +769,30 @@ export class CharactersComponent implements OnChanges, OnDestroy, OnInit {
 
         if (char.films.length > 0) {
 
-          this.getFilms(char, list);
+          this.getFilms(char, isMobile, list);
 
         } else {
 
           list.sort();
 
           // Update character value.
-          for (let i = 0; i < this.selCharacters.length; i++) {
-            if (this.selCharacters[i].url === char.url) {
-              this.selCharacters[i].films = list;
-              this.selCharacters[i].loadedFilms = true;
-              this.storeCharacterData(char);
-              return;
+          if (isMobile) {
+
+            this.selCharacterMobile.films = list;
+            this.selCharacterMobile.loadedFilms = true;
+            this.storeCharacterData(char);
+
+          } else {
+
+            for (let i = 0; i < this.selCharacters.length; i++) {
+              if (this.selCharacters[i].url === char.url) {
+                this.selCharacters[i].films = list;
+                this.selCharacters[i].loadedFilms = true;
+                this.storeCharacterData(char);
+                return;
+              }
             }
+
           }
 
         }
@@ -766,7 +810,7 @@ export class CharactersComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   // Get vechicles data.
-  private getVehicles(char: IPeople, list?: string[]): void {
+  private getVehicles(char: IPeople, isMobile: boolean = false, list?: string[]): void {
 
     // Initialize list if none.
     list = list || [];
@@ -785,18 +829,28 @@ export class CharactersComponent implements OnChanges, OnDestroy, OnInit {
 
         if (char.vehicles.length > 0) {
 
-          this.getVehicles(char, list);
+          this.getVehicles(char, isMobile, list);
 
         } else {
 
           // Update character value.
-          for (let i = 0; i < this.selCharacters.length; i++) {
-            if (this.selCharacters[i].url === char.url) {
-              this.selCharacters[i].vehicles = list;
-              this.selCharacters[i].loadedVehicles = true;
-              this.storeCharacterData(char);
-              return;
+          if (isMobile) {
+
+            this.selCharacterMobile.vehicles = list;
+            this.selCharacterMobile.loadedVehicles = true;
+            this.storeCharacterData(char);
+
+          } else {
+
+            for (let i = 0; i < this.selCharacters.length; i++) {
+              if (this.selCharacters[i].url === char.url) {
+                this.selCharacters[i].vehicles = list;
+                this.selCharacters[i].loadedVehicles = true;
+                this.storeCharacterData(char);
+                return;
+              }
             }
+
           }
 
         }
@@ -814,7 +868,7 @@ export class CharactersComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   // Get starships data.
-  private getStarships(char: IPeople, list?: string[]): void {
+  private getStarships(char: IPeople, isMobile: boolean = false, list?: string[]): void {
 
     // Initialize list if none.
     list = list || [];
@@ -833,18 +887,28 @@ export class CharactersComponent implements OnChanges, OnDestroy, OnInit {
 
         if (char.starships.length > 0) {
 
-          this.getStarships(char, list);
+          this.getStarships(char, isMobile, list);
 
         } else {
 
           // Update character value.
-          for (let i = 0; i < this.selCharacters.length; i++) {
-            if (this.selCharacters[i].url === char.url) {
-              this.selCharacters[i].starships = list;
-              this.selCharacters[i].loadedStarships = true;
-              this.storeCharacterData(char);
-              return;
+          if (isMobile) {
+
+            this.selCharacterMobile.starships = list;
+            this.selCharacterMobile.loadedStarships = true;
+            this.storeCharacterData(char);
+
+          } else {
+
+            for (let i = 0; i < this.selCharacters.length; i++) {
+              if (this.selCharacters[i].url === char.url) {
+                this.selCharacters[i].starships = list;
+                this.selCharacters[i].loadedStarships = true;
+                this.storeCharacterData(char);
+                return;
+              }
             }
+
           }
 
         }

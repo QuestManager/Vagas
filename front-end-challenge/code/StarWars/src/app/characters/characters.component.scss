@@ -37,12 +37,19 @@
 
   // Link to home.
   .img-home {
+
     cursor: pointer;
     left: 10px;
     position: absolute;
     top: 10px;
     width: 40px;
     z-index: 1000;
+
+    @media screen and (max-width: 550px) {
+      left: 50%;
+      margin-left: -20px;
+    }
+
   }
 
   // Tooltip for link to home.
@@ -61,19 +68,45 @@
     margin-top: 20px;
     text-align: center;
 
+    @media screen and (max-width: 550px) {
+      margin-top: 60px;
+    }
+
     span {
+
       color: $orange-custom;
       cursor: pointer;
       font-weight: 900;
       margin: auto 10px;
+
+      @media screen and (max-width: 550px) {
+        left: 50%;
+        top: 90px;
+        position: absolute;
+      }
+
+      &:first-of-type {
+
+        @media screen and (max-width: 550px) {
+          margin-left: -25px;
+        }
+
+      }
+
     }
 
     h1 {
+
       background-color: $orange-custom;
       border-radius: 3px;
       color: $white-custom;
       display: inline;
       padding: 5px 20px 3px;
+
+      @media screen and (max-width: 550px) {
+        padding: 5px;
+      }
+
     }
 
   }
@@ -238,6 +271,97 @@
 
     /* Handle on hover */
     ::-webkit-scrollbar-thumb:hover { background: $orange-custom; }
+
+  }
+
+  .dynamic-content.dc-desktop {
+
+    @media screen and (max-width: 550px) {
+      display: none;
+    }
+
+  }
+
+  .dynamic-content.dc-mobile {
+
+    margin: 40px 10px;
+
+    select {
+
+      background-color: #fadd3b;
+      border: 1px solid #fff;
+      box-shadow: none;
+      color: #fd3c00;
+      font-family: StarWars;
+      left: 50%;
+      margin-top: 20px;
+      padding: 10px;
+      position: absolute;
+      transform: translate(-50%, -50%);
+      width: 90%;
+
+      &:focus { border: 1px solid #fd3c00; }
+
+    }
+
+    // Selected characters details.
+    .char-details {
+
+      background-color: $yellow-custom;
+      border: 2px solid $black-custom;
+      box-sizing: border-box;
+      left: 18px;
+      padding: 15px;
+      position: absolute;
+      right: 16px;
+      top: 170px;
+      width: auto;
+
+      h1 { 
+        margin: 5px 0 15px;
+        text-transform: uppercase;
+      }
+
+      // Characters details.
+      .details {
+
+        border-top: 2px solid $black-custom;
+        padding: 15px 0 0;
+        margin-top: 10px;
+
+        p {
+          font-size: 0.7rem;
+          line-height: 1rem;
+          margin-bottom: 6px;
+          text-transform: uppercase;
+        }
+
+        span {
+          background-color: $black-custom;
+          border-radius: 3px;
+          color: $yellow-custom;
+          padding: 3px;
+        }
+
+      }
+
+      // Close button.
+      .close-details {
+        background-color: $black-custom;
+        color: $yellow-custom;
+        cursor: pointer;
+        position: relative;
+        float: right;
+        margin-top: -15px;
+        margin-right: -17px;
+        padding: 13px;
+      }
+
+    }
+
+    @media screen and (max-width: 550px) {
+      display: block;
+    }
 
   }
 
