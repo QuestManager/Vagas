@@ -1,0 +1,49 @@
+@import '../../assets/styles/main.scss';
+
+/**
+* Container for not found page content.
+**/
+.notfound-container {
+
+  background-color: $yellow-custom;
+  height: 100%;
+  position: absolute;
+  width: 100%;
+  z-index: 500;
+
+  // Not found logo.
+  .notfound-logo {
+
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    text-align: center;
+    transform: translate(-50%, -50%);
+
+    // Not found text.
+    .presentation-text.fixed_text {
+
+      color: #fff;
+      font-size: 8rem;
+      text-transform: uppercase;
+
+      @media screen and (max-width: 550px) {
+        font-size: 5rem;
+      }
+
+    }
+
+    // Return to home link.
+    .presentation-text.subtitle {
+
+      color: $gray-custom;
+      cursor: pointer;
+      text-transform: lowercase;
+
+      &:hover { color: $orange-custom; }
+
+    }
+
+  }
+
+}

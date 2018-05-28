@@ -108,9 +108,9 @@ Os arquivos importantes são:
       - _services/: Serviços com métodos que podem ser utilizados de qualquer lugar da aplicação.
       - characters/: Contém todo o código (controladores, views, estilos, ...) relacionados a tela 4.
       - home/: Contém todo o código relacionado as telas 1, 2 e 3.
-      - notfound/: Contém o código da página que é chamada quando um endereço não é localizado (falta estilizar).
+      - notfound/: Contém o código da página que é chamada quando um endereço não é localizado (acesse uma URL que não existe, como http://localhost:4200/xyz).
       - app-routing.module.ts: Configuração de roteamento.
-      - app.component.*: Arquivos relacionados so componente principal (bootstrap) da aplicação.
+      - app.component.*: Arquivos relacionados ao componente principal (bootstrap) da aplicação.
       - app.module.ts: Configurações gerais do projeto (imports de arquivos globais, etc.).
     - assets: Armazena o conteúdo estático.
       - audio: Contém o arquivo .mp3 com a música tema do filme.
@@ -145,6 +145,7 @@ Algumas coisas não puderam ser implementadas devido a falta de tempo hábil. En
   - Ajustes relacionados a responsividade (deve funcionar bem em desktop, mas há problemas conhecidos em ambientes móveis).
   - Implementar todos os testes.
   - Testar em ambiente Windows e em outros navegadores (testei no Chrome apenas).
+  - Testar a versão para produção.
 
 # Observações finais
 
