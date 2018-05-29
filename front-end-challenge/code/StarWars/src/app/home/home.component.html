@@ -1,0 +1,100 @@
+<!-- Container for main page content. -->
+<section class="home-container presentation" (window:resize)="onResize()">
+
+  <!-- Main content. -->
+  <div *ngIf="!isLoading && !presentationScreen && !onTransiction" class="presentation-container main-content" [@enterAnimation]>
+
+    <!-- Espisodes list. -->
+    <div class="presentation films_list">
+      <span (click)="previousFilm()">&lt;</span>
+      Episode {{filmService.getRomanNumeral(activeFilm.episode_id)}}
+      <span (click)="nextFilm()">&gt;</span>
+    </div>
+
+    <!-- Film title. -->
+    <div class="presentation-text fixed_text">Star</div>
+    <div class="presentation-text random_text">{{activeFilm.title}}</div>
+    <div class="presentation-text fixed_text">Wars</div>
+
+    <!-- Continue button. -->
+    <div class="presentation-text continue" (click)="showPresentation()">Continue &gt;&gt;</div>
+
+  </div>
+  <!-- /main-content. -->
+
+  <!-- Crawl text. -->
+  <div *ngIf="!isLoading && (presentationScreen || onTransiction)" id="crawl-container" class="presentation-container presentation-crawl">
+
+    <!-- Audio. -->
+    <audio id="startwars_theme" preload="auto" autoplay>
+      <source src="assets/audio/starwars.mp3" type="audio/mpeg">
+    </audio>
+
+    <div *ngIf="!onTransiction" [@enterAnimation]>
+
+      <!-- Intro text -->
+      <div class="crawl-intro">
+        A long time ago, in a galaxy far, far away...
+      </div>
+
+      <!-- Star Wars logo. -->
+      <div class="crawl-logo">
+        <div class="presentation-text fixed_text">Star</div>
+        <div class="presentation-text fixed_text">Wars</div>
+      </div>
+
+      <!-- Opening crawl. -->
+      <div class="crawl-text">
+        <div id="crawl-content">
+          <p>Episode {{filmService.getRomanNumeral(activeFilm.episode_id)}}</p>
+          <h1>{{activeFilm.title}}</h1>
+          <p>{{activeFilm.opening_crawl}}</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Transiction loader. -->
+    <div *ngIf="onTransiction" class="transiction" [@transictionAnimation]>
+      
+      <!-- Logo. -->
+      <div class="transiction-logo">
+        <div class="presentation-text fixed_text">Star</div>
+        <div class="presentation-text fixed_text">Wars</div>
+        <div class="presentation-text subtitle">Episode {{filmService.getRomanNumeral(activeFilm.episode_id)}} - {{activeFilm.title}}</div>
+      </div>
+
+      <!-- Progress bar. -->
+      <div class="transiction-loader" [@progressBarAnimation]></div>
+
+    </div>
+
+  </div>
+  <!-- /presentation-crawl. -->
+
+  <!-- Loader. -->
+  <div *ngIf="isLoading" class="presentation-container" [@enterAnimation]>
+    <img class="loader-image" src="favicon.ico">
+    loading
+  </div>
+
+  <!-- Return to home. -->
+  <img
+    *ngIf="!isLoading && presentationScreen"
+    class="img-home"
+    src="assets/images/rebel.png"
+    (mouseenter)="showTooltip()"
+    (mouseleave)="hideTooltip()"
+    (click)="goToHome()"
+    [@homeLinkAnimation]
+  >
+
+  <div id="tooltipo-home" class="tooltip">Return to home page</div>
+
+  <span
+    *ngIf="!isLoading && presentationScreen"
+    class="skip-crawl"
+    (click)="skipCrawl()"
+  >{{isSkipping ? 'skipping...' : 'skip &gt;&gt;'}}</span>
+
+</section>

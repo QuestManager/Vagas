@@ -1,0 +1,165 @@
+<section class="characters-container">
+
+  <!-- Return to home. -->
+  <img
+    class="img-home"
+    src="assets/images/rebel.png"
+    (mouseenter)="showTooltip()"
+    (mouseleave)="hideTooltip()"
+    (click)="goToHome()"
+    [@homeLinkAnimation]
+  >
+  <div id="tooltipo-home" class="tooltip">Return to home page</div>
+
+  <!-- Main progress info. -->
+  <div *ngIf="isLoading" class="progress-info">
+    <progress></progress>
+    <p>Loading characters <span *ngIf="charsToLoad > 0">({{charsLoaded}}/{{charsToLoad}})</span></p>
+  </div>
+
+  <!-- Current film name and film selection. -->
+  <div *ngIf="!isLoading" class="film-title" [@enterAnimation]>
+    <span (click)="previousFilm()">&#8672;</span>
+    <h1>Episode {{filmService.getRomanNumeral(activeFilm.episode_id)}} - {{activeFilm.title}}</h1>
+    <span (click)="nextFilm()">&#8674;</span>
+  </div>
+
+  <!-- Dynamic content. -->
+  <div *ngIf="!isLoading" class="dynamic-content dc-desktop" [@contentAnimation]>
+
+    <!-- Characters list. -->
+    <div class="char-list">
+
+      <div
+        *ngFor="let char of characters; let i = index;"
+        id="{{char.url}}"
+        class="char-list-item"
+        mwlDraggable
+        dropData="{{char.url}}"
+        (dragEnd)="dragEnd($event)"
+      >
+        {{char.name}}
+      </div>
+
+    </div>
+    <!-- /char-list. -->
+
+    <!-- Characters info. -->
+    <div class="char-info">
+
+      <!-- Droppable area. -->
+      <div
+        mwlDroppable
+        id="dropContainer"
+        class="dropContainer"
+        [class.dropOverActive]="dropOverActive"
+        (dragEnter)="dropOverActive = true"
+        (dragLeave)="dropOverActive = false"
+        (drop)="dropped($event.dropData)"
+      >
+        <span [hidden]="droppedData">Drop here a character.</span>
+        <span [hidden]="!droppedData">{{ droppedData }}</span>
+      </div>
+      <!-- /dropContainer. -->
+
+      <!-- Selected characters details. -->
+      <div
+        *ngFor="let char of selCharacters; let i = index;"
+        id="details-{{char.url}}"
+        class="char-details"
+        [@charDetailsAnimation]
+      >
+        
+        <!-- Close character info button. -->
+        <div class="close-details" (click)="removeItem(char.url)">
+          X
+        </div>
+
+        <!-- Character name. -->
+        <h1>{{char.name}}</h1>
+
+        <!-- Character details. -->
+        <div class="details">
+
+          <!-- Left items. -->
+          <div style="float: left; width: 50%;">
+            <p><span>Name</span> {{char.name}}</p>
+            <p><span>Height</span> {{char.height | personHeight}} m</p>
+            <p><span>Mass</span> {{char.mass}} kg</p>
+            <p><span>Hair color</span> {{char.hair_color}}</p>
+            <p><span>Skin color</span> {{char.skin_color}}</p>
+            <p><span>Eye color</span> {{char.eye_color}}</p>
+            <p><span>Birth year</span> {{char.birth_year}}</p>
+            <p><span>Gender</span> {{char.gender}}</p>
+          </div>
+
+          <!-- Right items. -->
+          <div style="float: right; width: 50%;">
+            <p><span>Homeworld</span> {{char.loadedHomeworld ? (char.homeworld || N/A) : 'loading...'}}</p>
+            <p><span>Species</span> {{char.loadedSpecies ? (char.species || 'N/A') : 'loading...'}}</p>
+            <p><span>Films</span> {{char.loadedFilms ? (char.films | arrayJoin:", " || 'N/A') : 'loading...'}}</p>
+            <p><span>Vehicles</span> {{char.loadedVehicles ? (char.vehicles | arrayJoin:", " || 'N/A') : 'loading...'}}</p>
+            <p><span>Starships</span> {{char.loadedStarships ? (char.starships | arrayJoin:", " || 'N/A') : 'loading...'}}</p>
+          </div>
+
+        </div>
+        <!-- /details. -->
+
+      </div>
+      <!-- /char-details. -->
+
+    </div>
+    <!-- /char-info. -->
+
+  </div>
+  <!-- /dc-desktop. -->
+
+  <!-- Dynamic content (mobile). -->
+  <div *ngIf="!isLoading" class="dynamic-content dc-mobile" [@contentAnimation]>
+
+    <select (change)="mobileSelect($event.target.value)">
+      <option value="-1" disabled>Select a character</option>
+      <option
+        *ngFor="let char of characters; let i = index;"
+        id="{{char.url}}"
+        value="{{char.url}}"
+      >{{char.name}}</option>
+    </select>
+
+    <!-- Selected characters details. -->
+    <div
+      *ngIf="selCharacterMobile as char"
+      class="char-details"
+      [@charDetailsAnimation]
+    >
+
+      {{char.name}}
+
+      <!-- Characters details. -->
+      <div class="details">
+
+        <p><span>Name</span> {{char.name}}</p>
+        <p><span>Height</span> {{char.height | personHeight}} m</p>
+        <p><span>Mass</span> {{char.mass}} kg</p>
+        <p><span>Hair color</span> {{char.hair_color}}</p>
+        <p><span>Skin color</span> {{char.skin_color}}</p>
+        <p><span>Eye color</span> {{char.eye_color}}</p>
+        <p><span>Birth year</span> {{char.birth_year}}</p>
+        <p><span>Gender</span> {{char.gender}}</p>
+
+        <p><span>Homeworld</span> {{char.loadedHomeworld ? (char.homeworld || N/A) : 'loading...'}}</p>
+        <p><span>Species</span> {{char.loadedSpecies ? (char.species || 'N/A') : 'loading...'}}</p>
+        <p><span>Films</span> {{char.loadedFilms ? (char.films | arrayJoin:", " || 'N/A') : 'loading...'}}</p>
+        <p><span>Vehicles</span> {{char.loadedVehicles ? (char.vehicles | arrayJoin:", " || 'N/A') : 'loading...'}}</p>
+        <p><span>Starships</span> {{char.loadedStarships ? (char.starships | arrayJoin:", " || 'N/A') : 'loading...'}}</p>
+
+      </div>
+      <!-- /details. -->
+
+    </div>
+    <!-- /char-details. -->
+
+  </div>
+  <!-- /dc-mobile. -->
+
+</section>

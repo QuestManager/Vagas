@@ -1,0 +1,64 @@
+@import './main';
+
+/**
+* Font families.
+**/
+@font-face {
+  font-family: "STARWARS";
+  src: url("../fonts/STARWARS.eot?") format("eot"),
+  url("../fonts/STARWARS.woff") format("woff"),
+  url("../fonts/STARWARS.ttf") format("truetype"),
+  url("../fonts/STARWARS.svg#STARWARS") format("svg");
+  font-weight:normal;
+  font-style:normal;
+}
+
+/**
+* Body styles.
+**/
+body {
+
+  font-family: STARWARS;
+  margin: 0;
+
+}
+
+/**
+* Introduction pages body.
+**/
+body.page_intro {
+  
+  // Inherit from body.
+  @extend body;
+
+  // Custom values.
+  background-color: $black-custom;
+  color: $yellow-custom;
+  overflow: hidden;
+
+  // Background stars.
+  .page_intro-star {
+    background-color: $white-custom;
+    border-radius: 100%;
+    height: 1px;
+    position: absolute;
+    width: 1px;
+  }
+
+}
+
+/**
+* Characters pages body.
+**/
+body.characters_page {
+  
+  // Inherit from body.
+  @extend body;
+
+  // Custom values.
+  background-color: $yellow-custom;
+  color: $white-custom;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+}

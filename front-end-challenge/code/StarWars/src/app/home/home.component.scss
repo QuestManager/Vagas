@@ -1,0 +1,259 @@
+@import '../../assets/styles/main.scss';
+
+/**
+* Container for main page content.
+**/
+.home-container {
+
+  // Container for presentation items.
+  .presentation-container {
+
+    position: absolute;
+    left: 50%;
+    text-align: center;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+
+    // Texts inside presentation container.
+    .presentation-text { text-transform: uppercase; }
+
+    // Films list navigation.
+    .films_list {
+    
+      margin-bottom: 15px;
+      text-transform: uppercase;
+
+      span { cursor: pointer; }
+
+    }
+
+    // Fixed texts.
+    .presentation-text.fixed_text {
+
+      color: #fff;
+      font-size: 8rem;
+
+      @media screen and (max-width: 550px) {
+        font-size: 5rem;
+      }
+
+    }
+
+    // Subtitle.
+    .presentation-text.subtitle { color: $gray-custom; }
+
+    // Random text (movie name).
+    .presentation-text.random_text {
+
+      background-color: $black-custom;
+      border: 1px solid $yellow-custom;
+      color: $yellow-custom;
+      display: inline-block;
+      font-size: 4rem;
+      margin: -10px 0 10px;
+      padding: 12px 12px 0;
+      white-space: nowrap;
+
+      @media screen and (max-width: 1092px) {
+        font-size: 3rem;
+      }
+
+      @media screen and (max-width: 800px) {
+        font-size: 2rem;
+        padding: 8px 12px 0;
+      }
+
+      @media screen and (max-width: 550px) {
+        font-size: 1rem;
+        padding: 4px 12px 0;
+      }
+
+    }
+
+    // Continue button.
+    .presentation-text.continue {
+      cursor: pointer;
+    }
+
+    // Preloader image.
+    .loader-image {
+      display: block;
+      opacity: 0.4;
+    }
+
+  }
+
+  // Link to home.
+  .img-home {
+    cursor: pointer;
+    left: 10px;
+    position: absolute;
+    top: 10px;
+    width: 40px;
+    z-index: 1000;
+  }
+
+  .skip-crawl {
+    cursor: pointer;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    z-index: 1000;
+  }
+
+  // Crawl content.
+  .presentation-crawl {
+
+    // Intro text.
+    .crawl-intro {
+      /*top: 45%;
+      left: 50%;*/
+      position: absolute;
+      top: 40%;
+      z-index: 1;
+      animation: intro 6s ease-out 1s;
+      color: $blue-custom;
+      font-weight: 400;
+      font-size: 2rem;
+      opacity: 0;
+
+      @keyframes intro {
+        0% { opacity: 0; }
+        20% { opacity: 1; }
+        90% { opacity: 1; }
+        100% { opacity: 0; }
+      }
+
+    }
+
+    // Star Wars logo.
+    .crawl-logo {
+
+      /*position: absolute;
+      top: 20%;
+      left: 45%;*/
+      left: -10%;
+      z-index: 1;
+      margin: auto;
+      margin-left: -20%;
+      animation: logo 9s ease-out 9s;
+      opacity: 0;
+
+      /* Scale the logo down and maintain it centered */
+      @keyframes logo {
+        0% {
+          width: 18em;        
+          transform: scale(2.75);
+          opacity: 1;
+        }
+        50% {
+          opacity: 1;
+          width: 18em;      
+        }
+        100% {
+          opacity: 0;
+          transform: scale(0.1);
+          width: 18em;        
+        }
+      }
+
+    }
+
+    // Opening crawl.
+    .crawl-text {
+
+      font-family: Century Gothic, CenturyGothic, AppleGothic, sans-serif;
+      transform: perspective(400px) rotateX(25deg);
+      transform-origin: 50% 100%;
+      text-align: justify;
+      position: absolute;
+      margin-left: -9em;
+      font-weight: bold;
+      overflow: hidden;
+      font-size: 350%;
+      height: 50em;
+      width: 18em;
+      /*bottom: 0;*/
+      bottom: -100%;
+      left: 50%;
+
+      &:after {
+        position: absolute;
+        content: ' ';
+        bottom: 60%;
+        left: 0;
+        right: 0;
+        top: 0;
+      }
+
+      /* Set the scrolling animation and position it */
+      #crawl-content {
+        
+        animation: scroll 100s linear 16s;
+        position: absolute;
+        top: 100%;
+        z-index: 1000;
+
+        h1 { 
+          font-size: 5rem !important;
+          margin: 40px 0 !important;
+        }
+
+        p { font-size: 3rem !important; }
+
+        @keyframes scroll {
+          0% { top: 100%; }
+          100% { top: -170%; }
+        }
+
+      }
+
+    }
+
+    // Transiction page.
+    .transiction {
+    
+      background-color: $yellow-custom;
+      height: 100%;
+      position: absolute;
+      width: 100%;
+      z-index: 500;
+
+      // Logo.
+      .transiction-logo {
+        left: 50%;
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      // Page loader.
+      .transiction-loader {
+        background-color: $orange-custom;
+        bottom: 0;
+        height: 10px;
+        left: 0;
+        position: absolute;
+      }
+  
+    }
+
+  }
+
+  // When transiction page is visible.
+  .presentation-crawl.crawl-transiction {
+    height: 100%;
+    width: 100%;
+  }
+
+  .tooltip {
+    visibility: hidden;
+    background-color: $yellow-custom;
+    border-radius: 3px;
+    color: $gray-custom;
+    padding: 5px;
+    position: absolute;
+  }
+
+}

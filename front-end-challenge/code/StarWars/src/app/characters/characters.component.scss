@@ -1,0 +1,369 @@
+@import '../../assets/styles/main.scss';
+
+/**
+* Container for main page content.
+**/
+.characters-container {
+
+  height: 90%;
+  position: absolute;
+  width: 100%;
+
+  // Loading progress info.
+  .progress-info {
+
+    bottom: -20px;
+    height: 40px;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+
+    // Progress bar.
+    progress {
+      left: 50%;
+      margin-left: -100px;
+      position: absolute;
+      width: 200px;
+    }
+
+    p {
+      color: $orange-custom;
+      font-size: small;
+      margin-top: 30px;
+      text-transform: uppercase;
+    }
+
+  }
+
+  // Link to home.
+  .img-home {
+
+    cursor: pointer;
+    left: 10px;
+    position: absolute;
+    top: 10px;
+    width: 40px;
+    z-index: 1000;
+
+    @media screen and (max-width: 550px) {
+      left: 50%;
+      margin-left: -20px;
+    }
+
+  }
+
+  // Tooltip for link to home.
+  .tooltip {
+    visibility: hidden;
+    background-color: $gray-custom;
+    border-radius: 3px;
+    color: $yellow-custom;
+    padding: 5px;
+    position: absolute;
+  }
+
+  // Film title.
+  .film-title {
+
+    margin-top: 20px;
+    text-align: center;
+
+    @media screen and (max-width: 550px) {
+      margin-top: 60px;
+    }
+
+    span {
+
+      color: $orange-custom;
+      cursor: pointer;
+      font-weight: 900;
+      margin: auto 10px;
+
+      @media screen and (max-width: 550px) {
+        left: 50%;
+        top: 90px;
+        position: absolute;
+      }
+
+      &:first-of-type {
+
+        @media screen and (max-width: 550px) {
+          margin-left: -25px;
+        }
+
+      }
+
+    }
+
+    h1 {
+
+      background-color: $orange-custom;
+      border-radius: 3px;
+      color: $white-custom;
+      display: inline;
+      padding: 5px 20px 3px;
+
+      @media screen and (max-width: 550px) {
+        padding: 5px;
+      }
+
+    }
+
+  }
+
+  // Dynamic content container.
+  .dynamic-content {
+
+    color: $black-custom;
+    display: flex;
+    margin: 20px auto 0;
+    max-height: 100%;
+    width: 80%;
+
+    // Characters list.
+    .char-list {
+
+      float: left;
+
+      overflow-x: hidden;
+      overflow-y: scroll;
+      padding-right: 10px;
+
+      // Each characters list item.
+      .char-list-item {
+
+        background-color: $yellow-custom;
+        border: 1px solid $black-custom;
+        cursor: pointer;
+        margin-bottom: 20px;
+        padding: 13px 10px 10px;
+        text-transform: uppercase;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+
+        &:hover { 
+          border-color: $orange-custom;
+          color: $orange-custom;
+        }
+
+      }
+
+      // Selected characters list items.
+      .selectedCharItem {
+
+        border: 1px solid $gray-custom;
+        color: $gray-custom;
+        cursor: not-allowed !important;
+        opacity: 0.2;
+
+        &:hover { 
+          border: 1px solid $gray-custom;
+          color: inherit;
+        }
+
+      }
+
+    }
+
+    // Characters info.
+    .char-info {
+
+      display: grid;
+      padding-left: 20px;
+      width: 100%;
+
+      // Droppable area.
+      .dropContainer {
+
+        align-items: center;
+        background-color: $black-custom;
+        border: 2px dashed;
+        color: $yellow-custom;
+        display: flex;
+        justify-content: center;
+        /*margin-bottom: 10px;*/
+        min-height: 40px;
+        text-align: center;
+        width: 100%;
+        z-index: 2000;
+
+      }
+
+      // When drag over.
+      .dropOverActive {
+        background-color: $gray-custom;
+        cursor: move;
+      }
+
+      // Selected characters details.
+      .char-details {
+
+        background-color: $yellow-custom;
+        border: 2px solid $black-custom;
+        box-sizing: border-box;
+        clear: both;
+        display: block;
+        height: 260px;
+        margin-bottom: 3px;
+        margin-top: 10px;
+        padding: 15px;
+        width: 100%;
+
+        &:first-child { margin-top: 5px; }
+
+        h1 { 
+          margin: 5px 0 15px;
+          text-transform: uppercase;
+        }
+
+        // Characters details.
+        .details {
+
+          border-top: 2px solid $black-custom;
+          display: flex;
+          padding: 10px 0;
+          margin-top: 10px;
+
+          p {
+            font-size: 0.7rem;
+            line-height: 1rem;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+          }
+
+          span {
+            background-color: $black-custom;
+            border-radius: 3px;
+            color: $yellow-custom;
+            padding: 3px;
+          }
+
+        }
+
+        // Close button.
+        .close-details {
+          background-color: $black-custom;
+          color: $yellow-custom;
+          cursor: pointer;
+          position: relative;
+          float: right;
+          margin-top: -15px;
+          margin-right: -17px;
+          padding: 13px;
+        }
+
+      }
+
+    }
+
+    /* width */
+    ::-webkit-scrollbar { width: 10px; }
+
+    /* Track */
+    ::-webkit-scrollbar-track { background: $yellow-custom; }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb { background: $orange-custom; }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover { background: $orange-custom; }
+
+  }
+
+  .dynamic-content.dc-desktop {
+
+    @media screen and (max-width: 550px) {
+      display: none;
+    }
+
+  }
+
+  .dynamic-content.dc-mobile {
+
+    display: none;
+    margin: 40px 10px;
+
+    select {
+
+      background-color: #fadd3b;
+      border: 1px solid #fff;
+      box-shadow: none;
+      color: #fd3c00;
+      font-family: StarWars;
+      left: 50%;
+      margin-top: 20px;
+      padding: 10px;
+      position: absolute;
+      transform: translate(-50%, -50%);
+      width: 90%;
+
+      &:focus { border: 1px solid #fd3c00; }
+
+    }
+
+    // Selected characters details.
+    .char-details {
+
+      background-color: $yellow-custom;
+      border: 2px solid $black-custom;
+      box-sizing: border-box;
+      left: 18px;
+      padding: 15px;
+      position: absolute;
+      right: 16px;
+      top: 170px;
+      width: auto;
+
+      h1 { 
+        margin: 5px 0 15px;
+        text-transform: uppercase;
+      }
+
+      // Characters details.
+      .details {
+
+        border-top: 2px solid $black-custom;
+        padding: 15px 0 0;
+        margin-top: 10px;
+
+        p {
+          font-size: 0.7rem;
+          line-height: 1rem;
+          margin-bottom: 6px;
+          text-transform: uppercase;
+        }
+
+        span {
+          background-color: $black-custom;
+          border-radius: 3px;
+          color: $yellow-custom;
+          padding: 3px;
+        }
+
+      }
+
+      // Close button.
+      .close-details {
+        background-color: $black-custom;
+        color: $yellow-custom;
+        cursor: pointer;
+        position: relative;
+        float: right;
+        margin-top: -15px;
+        margin-right: -17px;
+        padding: 13px;
+      }
+
+    }
+
+    @media screen and (max-width: 550px) {
+      display: block;
+    }
+
+  }
+
+}
